@@ -56,7 +56,7 @@ endif
 "=============================================================================
 " Plugins managed by vundle:
 "=============================================================================
-set rtp+=~/.vim/bundle/vundle
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " Let Vundle manage Vundle (required):
