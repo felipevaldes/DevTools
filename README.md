@@ -10,7 +10,12 @@ Development tools and configurations
     - git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     - run vim and execute :PluginInstall
 
-2. Install latest tmux (2.6) from source:
+2. YouCompleteMe Plugin for Vim requires a compiled component to work:
+    - cd ~/.vim/bundle/YouCompleteMe
+    - ./install.py --all
+    - For mnore info check https://github.com/Valloric/YouCompleteMe
+
+3. Install latest tmux (2.6) from source:
     - sudo apt-get -y remove tmux
     - sudo apt-get -y install wget tar libevent-dev libncurses-dev
     - wget https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz
@@ -24,7 +29,7 @@ Development tools and configurations
     - sudo rm -rf /usr/local/src/tmux-*
     - sudo mv tmux-${VERSION} /usr/local/src
 
-3. Install Tmux Plugin Manager (TPM): (https://github.com/tmux-plugins/tpm):
+4. Install Tmux Plugin Manager (TPM): (https://github.com/tmux-plugins/tpm):
     - git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
     - run tmux and execute tmux source ~/.tmux.conf
     - [prefix] + I to install all plugins
