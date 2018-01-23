@@ -92,6 +92,9 @@ if exists("&undodir")
 	set undodir=~/.vim/undo
 endif
 
+" Switch between buffers:
+nnoremap <F5> :buffers<CR>:buffer<Space> 
+
 
 "=============================================================================
 " Plugins managed by vundle:
@@ -117,13 +120,17 @@ let g:jellybeans_overrides = {
 Plugin 'tomasr/molokai'
 let g:rehash256 = 1
 "--------------------------------------
-"colorscheme molokai 
+Plugin 'tomasiser/vim-code-dark'
+"-------------------------------------
 
 "File-tree :
 Plugin 'The-NERD-tree', { 'on':'NERDTreeToggle' }
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\.swp$', '\~$']
 let g:NERDTreeMouseMode = 2  " Single-click to expand the directory, double-click to open the file
+
+"Git in File-tree:
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 "Fold code by indentation:
 Plugin 'tmhedberg/SimpylFold'
@@ -182,6 +189,12 @@ let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always w
 let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
 let g:ConqueTerm_StartMessages = 0 " show warning messages if conqueTerm is configured incorrectly
 
+"Adds diff option when Vim finds a swap file:
+Plugin 'chrisbra/Recover.vim'
+
+"Delete buffers and close files withour loosing windows:
+Plugin 'moll/vim-bbye'
+nnoremap <Leader>q :Bdelete<CR>
 
 Plugin 'grep.vim'
 Plugin 'yssl/QFEnter'
@@ -204,5 +217,6 @@ call vundle#end()
 filetype plugin indent on
 "=============================================================================
 
-colorscheme molokai 
+colorscheme codedark
+let g:airline_theme='codedark'
 
