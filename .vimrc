@@ -50,7 +50,11 @@ set shortmess=atI
 " Show the (partial) command as it’s being typed
 set showcmd
 " Allow mouse to work properly with tmux:
-set ttymouse=xterm2
+if has("mouse_sgr")
+    set ttymouse=sgr
+else
+    set ttymouse=xterm2
+end
 
 " Show line number
 set number
@@ -173,8 +177,17 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_error_symbol = "\u2717"
+let g:syntastic_warning_symbol = "\u26A0"
+function Py2()
+  let g:syntastic_python_python_exec = '/usr/bin/python'
+endfunction
+function Py3()
+  let g:syntastic_python_python_exec = '/usr/local/bin/python3.5'
+endfunction
+call Py2()   " default to Py3 because I try to use it when possible
 
 " Super_ Searching :
 Plugin 'kien/ctrlp.vim'
@@ -188,6 +201,13 @@ Plugin 'vim-scripts/Conque-GDB'
 let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always with color
 let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
 let g:ConqueTerm_StartMessages = 0 " show warning messages if conqueTerm is configured incorrectly
+let g:ConqueTerm_ReadUnfocused = 1 " Conque buffers will continue to update after you've switched to another buffer
+let g:ConqueGdb_SrcSplit = 'right'
+let g:ConqueGdb_SaveHistory = 1
+nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
+nnoremap <silent> <Leader>N :ConqueGdbCommand n<CR>
+
+
 
 "Adds diff option when Vim finds a swap file:
 Plugin 'chrisbra/Recover.vim'
@@ -205,6 +225,7 @@ autocmd FileType python setlocal commentstring=#\ %s
 
 "Remote tags -> Source code navigator:
 Plugin 'lyuts/vim-rtags'
+let g:rtagsAutoLaunchRdm = 1
 
 " Vim-tmux navigation:
 "Plugin 'christoomey/vim-tmux-navigator'
@@ -217,6 +238,6 @@ call vundle#end()
 filetype plugin indent on
 "=============================================================================
 
-colorscheme codedark
-let g:airline_theme='codedark'
+colorscheme molokai
+"let g:airline_theme='codedark'
 
