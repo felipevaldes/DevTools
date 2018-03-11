@@ -19,7 +19,7 @@ Development tools and configurations
     cd ~/.vim/bundle/YouCompleteMe
     ./install.py --all
     ```
-    - For mnore info check https://github.com/Valloric/YouCompleteMe
+    - For more info check https://github.com/Valloric/YouCompleteMe
 
 3. Install latest tmux (2.6) from source:
     ```
