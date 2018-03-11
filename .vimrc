@@ -14,7 +14,7 @@ set secure
 syntax enable
 "Column @ 100 characters:
 set colorcolumn=100
-highlight ColorColumn ctermbg=White
+highlight ColorColumn ctermbg=234
 
 
 set tabstop=4
@@ -27,10 +27,10 @@ set backspace=2		" Backspace deletes like most programs in insert mode
 set updatetime=250
 
 "Split navigations:
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <C-Down> <C-W><C-J>
+nnoremap <C-Up> <C-W><C-K>
+nnoremap <C-Right> <C-W><C-L>
+nnoremap <C-Left> <C-W><C-H>
 
 "Enable folding:
 set foldmethod=indent
@@ -97,8 +97,13 @@ if exists("&undodir")
 endif
 
 " Switch between buffers:
-nnoremap <F5> :buffers<CR>:buffer<Space> 
+nnoremap <F5> :buffers<CR>:buffer<Space>
 
+" Open quickfix-window at the bottom:
+nnoremap :copen :botright copen
+
+" Look for tags file in the current directory or up until tags is found:
+set tags=./tags,tags;$HOME
 
 "=============================================================================
 " Plugins managed by vundle:
@@ -122,10 +127,10 @@ let g:jellybeans_overrides = {
 \}
 "--------------------------------------
 Plugin 'tomasr/molokai'
-let g:rehash256 = 1
 "--------------------------------------
 Plugin 'tomasiser/vim-code-dark'
-"-------------------------------------
+"--------------------------------------
+Plugin 'felipevaldes/molokai_fvv'
 
 "File-tree :
 Plugin 'The-NERD-tree', { 'on':'NERDTreeToggle' }
@@ -160,6 +165,7 @@ let g:airline#extensions#branch#enabled = 1      " Enable Git client integration
 let g:airline#extensions#tagbar#enabled = 1      " Enable Tagbar integration
 let g:airline#extensions#hunks#enabled = 1       " Enable Git hunks integration
 
+
 "C/C++ completion:
 Plugin 'Valloric/YouCompleteMe'
 let g:ycm_confirm_extra_conf = 0
@@ -181,20 +187,16 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_error_symbol = "\u2717"
 let g:syntastic_warning_symbol = "\u26A0"
-function Py2()
-  let g:syntastic_python_python_exec = '/usr/bin/python'
-endfunction
-function Py3()
-  let g:syntastic_python_python_exec = '/usr/local/bin/python3.5'
-endfunction
-call Py2()   " default to Py3 because I try to use it when possible
 
 " Super_ Searching :
 Plugin 'kien/ctrlp.vim'
 
-" Source code navigator (files in buffer):
+" Tag viewer (files in buffer):
 Plugin 'majutsushi/tagbar'
 nnoremap <silent> <F9> :TagbarToggle<CR>
+
+" Auto-update ctags files:
+Plugin 'craigemery/vim-autotag'
 
 " GDB integration:
 Plugin 'vim-scripts/Conque-GDB'
@@ -216,16 +218,16 @@ Plugin 'chrisbra/Recover.vim'
 Plugin 'moll/vim-bbye'
 nnoremap <Leader>q :Bdelete<CR>
 
-Plugin 'grep.vim'
-Plugin 'yssl/QFEnter'
+" Plugin 'grep.vim'i ---------------> EVALUATE if needed
+" Plugin 'yssl/QFEnter'
 
 " Comment stuff out:
 Plugin 'tpope/vim-commentary'
 autocmd FileType python setlocal commentstring=#\ %s
 
-"Remote tags -> Source code navigator:
-Plugin 'lyuts/vim-rtags'
-let g:rtagsAutoLaunchRdm = 1
+""Remote tags -> Source code navigator: ----------------------------------> EVALUATE    
+"Plugin 'lyuts/vim-rtags'
+"let g:rtagsAutoLaunchRdm = 1
 
 " Vim-tmux navigation:
 "Plugin 'christoomey/vim-tmux-navigator'
@@ -238,6 +240,5 @@ call vundle#end()
 filetype plugin indent on
 "=============================================================================
 
-colorscheme molokai
-"let g:airline_theme='codedark'
-
+colorscheme molokai_fvv
+let g:airline_theme='mytheme'
