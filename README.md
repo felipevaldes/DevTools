@@ -28,3 +28,8 @@ Development tools and configurations
     ```
     - run tmux and execute tmux source ~/.tmux.conf
     - [prefix] + I to install all plugins
+
+5. Modifiy `.bashrc` to show git branch in the prompt: replace the existing `PS1` line with
+```
+PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[0;91m\]($(git branch 2>/dev/null | grep '^*' | colrm 1 2))\[\033[01;34m\]\$\[\033[00m\] '
+```
