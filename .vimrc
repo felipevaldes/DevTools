@@ -58,7 +58,7 @@ end
 
 " Show line number
 set number
-"set relativenumber
+set relativenumber
 set numberwidth=5
 
 " Start scrolling three lines before the horizontal window border
@@ -149,7 +149,7 @@ Plugin 'Yggdroot/indentLine'
 let g:indentLine_char = '┊'
 let g:indentLine_showFirstIndentLevel = 1
 
-"Git Integration : 
+"Git Integration :
 Plugin 'tpope/vim-fugitive'
 
 "Show git diff in the gutter (sign column):
@@ -240,5 +240,5 @@ call vundle#end()
 filetype plugin indent on
 "=============================================================================
 
-colorscheme molokai_fvv
-let g:airline_theme='mytheme'
+colorscheme codedark
+let g:airline_theme='codedark'
