@@ -5,6 +5,7 @@ Development tools and configurations
     ```
     cp .vimrc ~/
     cp .tmux.config ~/
+    cp .bash_alias ~/
     ```    
 1. Install Vundle, the plug-in manager for Vim (http://github.com/VundleVim/Vundle.Vim:
     - make sure curl is installed
