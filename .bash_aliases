@@ -12,3 +12,7 @@ alias dcu2='ssh snbuilder@ccu-dcu-2'
 alias ert2='ssh snbuilder@ccu-ert-2'
 alias hu2='ssh snbuilder@ccu-hu-2'
 alias tester2='ssh snbuilder@ccu-tester-2'
+
+alias dcu4='ssh snbuilder@ccu-dcu-4'
+alias hu4='ssh snbuilder@ccu-hu-4'
+
