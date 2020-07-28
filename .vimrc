@@ -102,6 +102,9 @@ nnoremap <F5> :buffers<CR>:buffer<Space>
 " Open quickfix-window at the bottom:
 nnoremap :copen :botright copen
 
+" Highlight trailing white spaces at the end of a line:
+autocmd CursorMoved * match ErrorMsg '\s\+$'
+
 " Look for tags file in the current directory or up until tags is found:
 set tags=./tags,tags;$HOME
 
