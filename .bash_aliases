@@ -1,6 +1,9 @@
 alias gitlog='git log --graph --all --pretty=oneline'
 
 alias builder5='ssh felipe@builder5'
+alias builder5='ssh felipe@builder5.sonatus-internal'
+alias builder7='ssh felipe@builder7'
+alias builder7='ssh felipe@builder7.sonatus-internal'
 alias tester3='ssh felipe@ccu-tester-3'
 alias tester4='ssh felipe@ccu-tester-4'
 alias tester5='ssh felipe@ccu-tester-5'
