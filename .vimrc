@@ -190,7 +190,7 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_error_symbol = "\u2717"
 let g:syntastic_warning_symbol = "\u26A0"
-let g:syntastic_python_checkers=['flake8']
+let g:syntastic_python_checkers=['pylint']
 
 " Super_ Searching :
 Plugin 'kien/ctrlp.vim'
