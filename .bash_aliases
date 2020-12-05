@@ -11,6 +11,7 @@ alias tester4='ssh felipe@ccu-tester-4'
 alias tester5='ssh felipe@ccu-tester-5'
 alias tester6='ssh felipe@ccu-tester-6'
 alias tester7='ssh felipe@ccu-tester-7'
+alias tester8='ssh felipe@ccu-tester-8'
 
 alias dcu1='ssh snbuilder@ccu-dcu-1'
 alias ert1='ssh snbuilder@ccu-ert-1'
