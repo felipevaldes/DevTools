@@ -1,21 +1,23 @@
 alias gitlog='git log --graph --all --pretty=oneline'
 
-alias builder5='ssh felipe@builder5'
+# alias builder5='ssh felipe@builder5'
 alias builder5='ssh felipe@builder5.sonatus-internal'
-alias builder7='ssh felipe@builder7'
+# alias builder7='ssh felipe@builder7'
 alias builder7='ssh felipe@builder7.sonatus-internal'
-alias tester1='ssh felipe@ccu-tester-1'
-alias tester2='ssh felipe@ccu-tester-2'
-alias tester3='ssh felipe@ccu-tester-3'
-alias tester4='ssh felipe@ccu-tester-4'
-alias tester5='ssh felipe@ccu-tester-5'
-alias tester6='ssh felipe@ccu-tester-6'
-alias tester7='ssh felipe@ccu-tester-7'
-alias tester8='ssh felipe@ccu-tester-8'
+alias tester1='ssh felipe@ccu-tester-1.sonatus-internal'
+alias tester2='ssh felipe@ccu-tester-2.sonatus-internal'
+alias tester3='ssh felipe@ccu-tester-3.sonatus-internal'
+alias tester4='ssh felipe@ccu-tester-4.sonatus-internal'
+alias tester5='ssh felipe@ccu-tester-5.sonatus-internal'
+alias tester6='ssh felipe@ccu-tester-6.sonatus-internal'
+alias tester7='ssh felipe@ccu-tester-7.sonatus-internal'
+alias tester8='ssh felipe@ccu-tester-8.sonatus-internal'
 
-alias dcu1='ssh snbuilder@ccu-dcu-1'
-alias ert1='ssh snbuilder@ccu-ert-1'
-alias hu1='ssh snbuilder@ccu-hu-1'
+alias tester1_2='ssh felipe@ccu2-tester-1.sonatus-internal'
+alias tester2_2='ssh felipe@ccu2-tester-2.sonatus-internal'
+alias tester3_2='ssh felipe@ccu2-tester-3.sonatus-internal'
+alias tester4_2='ssh felipe@ccu2-tester-4.sonatus-internal'
+
 
 
 
