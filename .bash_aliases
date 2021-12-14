@@ -14,10 +14,11 @@ alias tester9='ssh felipe@ccu-tester-9.sonatus-internal'
 alias tester10='ssh felipe@ccu-tester-10.sonatus-internal'
 alias tester11='ssh felipe@ccu-tester-11.sonatus-internal'
 
-alias tester1_2='ssh felipe@ccu2-tester-1.sonatus-internal'
-alias tester2_2='ssh felipe@ccu2-tester-2.sonatus-internal'
-alias tester3_2='ssh felipe@ccu2-tester-3.sonatus-internal'
-alias tester4_2='ssh felipe@ccu2-tester-4.sonatus-internal'
+alias tester1-2='ssh felipe@ccu2-tester-1.sonatus-internal'
+alias tester2-2='ssh felipe@ccu2-tester-2.sonatus-internal'
+alias tester3-2='ssh felipe@ccu2-tester-3.sonatus-internal'
+alias tester4-2='ssh felipe@ccu2-tester-4.sonatus-internal'
+alias tester5-2='ssh felipe@ccu2-tester-5.sonatus-internal'
 
 
 
