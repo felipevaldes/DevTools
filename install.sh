@@ -2,8 +2,8 @@
 
 echo "Copying config files to ~/:"
 cp .vimrc ~/
-cp .tmux.config ~/
-cp .bash_alias ~/
+cp .tmux.conf ~/
+cp .bash_aliases ~/
 cp .bashrc ~/
 source ~/.bashrc
 
