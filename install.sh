@@ -17,7 +17,7 @@ echo "Press any key when you are done..."
 while [ true ] ; do
     read -t 3 -n 1
     if [ $? = 0 ] ; then
-        exit ;
+        break ;
     else
         echo "   waiting for the keypress"
     fi
