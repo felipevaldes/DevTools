@@ -169,15 +169,15 @@ let g:airline#extensions#tagbar#enabled = 1      " Enable Tagbar integration
 let g:airline#extensions#hunks#enabled = 1       " Enable Git hunks integration
 
 
-"C/C++ completion:
-Plugin 'Valloric/YouCompleteMe'
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_min_num_of_chars_for_completion = 99 " Keeps the as-you-type pop-up silent
-" let s:omnifunc_mode = 0
-let g:ycm_error_symbol = 'E>'
-let g:ycm_warning_symbol = 'W>'
-"nnoremap <silent> <C-]> :YcmCompleter GoTo<CR>
-"nnoremap <Leader>c :YcmForceCompileAndDiagnostics<CR>
+-- "C/C++ completion:
+-- Plugin 'Valloric/YouCompleteMe'
+-- let g:ycm_confirm_extra_conf = 0
+-- let g:ycm_min_num_of_chars_for_completion = 99 " Keeps the as-you-type pop-up silent
+-- " let s:omnifunc_mode = 0
+-- let g:ycm_error_symbol = 'E>'
+-- let g:ycm_warning_symbol = 'W>'
+-- "nnoremap <silent> <C-]> :YcmCompleter GoTo<CR>
+-- "nnoremap <Leader>c :YcmForceCompileAndDiagnostics<CR>
 
 "Run linters and display errors:
 Plugin 'scrooloose/syntastic'
@@ -202,16 +202,16 @@ nnoremap <silent> <F9> :TagbarToggle<CR>
 " Auto-update ctags files:
 Plugin 'craigemery/vim-autotag'
 
-" GDB integration:
-Plugin 'vim-scripts/Conque-GDB'
-let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always with color
-let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
-let g:ConqueTerm_StartMessages = 0 " show warning messages if conqueTerm is configured incorrectly
-let g:ConqueTerm_ReadUnfocused = 1 " Conque buffers will continue to update after you've switched to another buffer
-let g:ConqueGdb_SrcSplit = 'right'
-let g:ConqueGdb_SaveHistory = 1
-nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
-nnoremap <silent> <Leader>N :ConqueGdbCommand n<CR>
+-- " GDB integration:
+-- Plugin 'vim-scripts/Conque-GDB'
+-- let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always with color
+-- let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
+-- let g:ConqueTerm_StartMessages = 0 " show warning messages if conqueTerm is configured incorrectly
+-- let g:ConqueTerm_ReadUnfocused = 1 " Conque buffers will continue to update after you've switched to another buffer
+-- let g:ConqueGdb_SrcSplit = 'right'
+-- let g:ConqueGdb_SaveHistory = 1
+-- nnoremap <silent> <Leader>Y :ConqueGdbCommand y<CR>
+-- nnoremap <silent> <Leader>N :ConqueGdbCommand n<CR>
 
 
 
