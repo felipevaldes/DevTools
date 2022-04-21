@@ -33,6 +33,6 @@ print_yellow "Then do [prefix] + I to install all plugins"
 
 
 print_green "Cloning snt-integration-tests..."
-git clone git@github.com:sonatus/snt-integration-tests.git
+git clone git@github.com:sonatus/snt-integration-tests.git ~/CODE/snt-integration-tests
 
 print_green "Done"
