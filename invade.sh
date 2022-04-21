@@ -38,5 +38,5 @@ ssh felipe@${host} ${cmd}
 cmd="git config --global core.editor \"vim\""
 ssh felipe@${host} ${cmd}
 
-print_yellow "Now ssh felipe@${host} and in git clone git@github.com:felipevaldes/DevTools.git CODE"
+print_yellow "Now ssh felipe@${host} and in git clone git@github.com:felipevaldes/DevTools.git ~/CODE/DevTools"
 print_green "All Done."
