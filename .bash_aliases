@@ -1,4 +1,5 @@
 alias gitlog='git log --graph --all --pretty=oneline'
+alias ap='sudo ip netns exec ccu_dcu ssh 10.0.6.0'
 
 alias builder5='ssh felipe@builder5.sonatus-internal'
 alias builder7='ssh felipe@builder7.sonatus-internal'
