@@ -28,7 +28,7 @@ alias tester2-10='ssh felipe@ccu2-tester-10.sonatus-internal'
 alias tester2-11='ssh felipe@ccu2-tester-11.sonatus-internal'
 alias tester2-100='ssh felipe@ccu2-tester-100.sonatus-internal'
 alias tester2-101='ssh felipe@ccu2-tester-101.sonatus-internal'
-alias tester2-102'ssh felipe@ccu2-tester-102.sonatus-internal'
+alias tester2-102='ssh felipe@ccu2-tester-102.sonatus-internal'
 
 
 
