@@ -1,5 +1,7 @@
+no_host_check="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
 alias gitlog='git log --graph --all --pretty=oneline'
-alias ap='sudo ip netns exec ccu_dcu ssh 10.0.6.0'
+alias ap='sudo ip netns exec ccu_dcu ssh ${no_host_check} 10.0.6.0'
 
 alias builder5='ssh felipe@builder5.sonatus-internal'
 alias builder7='ssh felipe@builder7.sonatus-internal'
@@ -35,4 +37,8 @@ manifest() {
     git clone git@github.com:sonatus/CCU_GEN2.0_SONATUS.manifest.git $1 
 }
 
-
+# scp $1 to 10.0.6.0:/download 
+scp_ccu() {
+    sudo ip netns exec ccu_dcu ssh ${no_host_check} 10.0.6.0 mount -o remount,rw /
+    sudo ip netns exec ccu_dcu scp ${no_host_check} -r $1 10.0.6.0:/download
+}
