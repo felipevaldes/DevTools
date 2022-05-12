@@ -30,6 +30,9 @@ alias tester2-100='ssh felipe@ccu2-tester-100.sonatus-internal'
 alias tester2-101='ssh felipe@ccu2-tester-101.sonatus-internal'
 alias tester2-102='ssh felipe@ccu2-tester-102.sonatus-internal'
 
-
+# Git clone CCU2-manifest repository into $1
+manifest() {
+    git clone git@github.com:sonatus/CCU_GEN2.0_SONATUS.manifest.git $1 
+}
 
 
