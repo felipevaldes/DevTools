@@ -116,3 +116,7 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+
+# Starship Prompt: (https://starship.rs/) --> Uncomment the following line:
+#eval "$(starship init bash)"
