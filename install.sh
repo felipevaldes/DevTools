@@ -8,6 +8,7 @@ cp .tmux.conf ~/
 cp .bash_aliases ~/
 cp .bashrc ~/
 cp -p starship.toml ~/.config/
+cp -p tabby_config.yaml ~/.config/tabby/config.yaml
 source ~/.bashrc
 
 print_green "Installing Vim addons"
