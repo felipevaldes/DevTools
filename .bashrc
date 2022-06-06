@@ -119,4 +119,4 @@ fi
 
 
 # Starship Prompt: (https://starship.rs/) --> Uncomment the following line:
-#eval "$(starship init bash)"
+eval "$(~/.local/bin/starship init bash)"

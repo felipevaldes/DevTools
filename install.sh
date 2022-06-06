@@ -2,11 +2,25 @@
 
 source common.sh
 
+
+install_starship() {
+    temp=starship_temp
+    mkdir ${temp}; cd ${temp}
+    wget https://starship.rs/install.sh
+    mkdir ~/.local/bin/
+    chmod +x install.sh
+    ./install.sh --bin-dir ~/.local/bin/
+    cd ../; rm -rf ${temp}
+    return 0
+}
+
+
 print_green "Copying config files to ~/:"
 cp .vimrc ~/
 cp .tmux.conf ~/
 cp .bash_aliases ~/
 cp .bashrc ~/
+install_starship
 cp -p starship.toml ~/.config/
 cp -p tabby_config.yaml ~/.config/tabby/config.yaml
 source ~/.bashrc
