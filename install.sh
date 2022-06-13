@@ -7,7 +7,7 @@ install_starship() {
     temp=starship_temp
     mkdir ${temp}; cd ${temp}
     wget https://starship.rs/install.sh
-    mkdir ~/.local/bin/
+    mkdir -p ~/.local/bin/
     chmod +x install.sh
     ./install.sh --bin-dir ~/.local/bin/
     cd ../; rm -rf ${temp}
