@@ -32,6 +32,21 @@ alias tester2-100='ssh felipe@ccu2-tester-100.sonatus-internal'
 alias tester2-101='ssh felipe@ccu2-tester-101.sonatus-internal'
 alias tester2-102='ssh felipe@ccu2-tester-102.sonatus-internal'
 
+alias win2-1='ssh snbuilder@ccu2-win-1.sonatus-internal'
+alias win2-2='ssh snbuilder@ccu2-win-2.sonatus-internal'
+alias win2-3='ssh snbuilder@ccu2-win-3.sonatus-internal'
+alias win2-4='ssh snbuilder@ccu2-win-4.sonatus-internal'
+alias win2-5='ssh snbuilder@ccu2-win-5.sonatus-internal'
+alias win2-6='ssh snbuilder@ccu2-win-6.sonatus-internal'
+alias win2-7='ssh snbuilder@ccu2-win-7.sonatus-internal'
+alias win2-8='ssh snbuilder@ccu2-win-8.sonatus-internal'
+alias win2-9='ssh felipe@ccu2-win-9.sonatus-internal'
+alias win2-10='ssh snbuilder@ccu2-win-10.sonatus-internal'
+alias win2-11='ssh snbuilder@ccu2-win-11.sonatus-internal'
+alias win2-100='ssh snbuilder@ccu2-win-100.sonatus-internal'
+alias win2-101='ssh snbuilder@ccu2-win-101.sonatus-internal'
+alias win2-102='ssh snbuilder@ccu2-win-102.sonatus-internal'
+
 # Git clone CCU2-manifest repository into $1
 manifest() {
     git clone git@github.com:sonatus/CCU_GEN2.0_SONATUS.manifest.git $1 
@@ -42,3 +57,4 @@ scp_ccu() {
     sudo ip netns exec ccu_dcu ssh ${no_host_check} 10.0.6.0 mount -o remount,rw /
     sudo ip netns exec ccu_dcu scp ${no_host_check} -r $1 10.0.6.0:/download
 }
+
