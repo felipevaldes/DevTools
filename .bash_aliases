@@ -1,4 +1,37 @@
-no_host_check="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+declare -r TRUE=0
+declare -r FALSE=1
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;94m'
+DARK_GREY='\033[0;90m'
+NC='\033[0m'
+
+print_red() {
+    echo -e "${RED}${1}${NC}"
+    return 0
+}
+
+print_green() {
+    echo -e "${GREEN}${1}${NC}"
+    return 0
+}
+print_yellow() {
+    echo -e "${YELLOW}${1}${NC}"
+    return 0
+}
+print_blue() {
+    echo -e "${BLUE}${1}${NC}"
+    return 0
+}
+
+print_grey() {
+    echo -e "${DARK_GREY}${1}${NC}"
+    return 0
+}
+
+no_host_check="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet"
 
 alias gitlog='git log --graph --all --pretty=oneline'
 alias ap='sudo ip netns exec ccu_dcu ssh ${no_host_check} 10.0.6.0'
@@ -58,3 +91,25 @@ scp_ccu() {
     sudo ip netns exec ccu_dcu scp ${no_host_check} -r $1 10.0.6.0:/download
 }
 
+get_local_station_info() {
+    ccu_num=$(awk -F '-' '{print $3}' <<< $HOSTNAME)
+    win_server="ccu2-win-${ccu_num}.sonatus-internal"
+    windows_boot_dir="C:\Users\snbuilder\Desktop\SerialDownload"
+    set_serial_normal="set_serial.py 2"
+}
+
+reset_board() {
+    get_local_station_info
+    echo ""
+    print_yellow "============================================================================="
+    print_yellow "Resetting the CCU board ..."
+    reset_cmd="cd ${windows_boot_dir} && power_off.py && ${set_serial_normal} && power_on.py"
+    print_grey "reset_cmd: ${reset_cmd}"
+    ssh ${no_host_check} snbuilder@${win_server} ${reset_cmd}
+    # status_code=$?
+    # if [ $status_code -ne 0 ]; then
+    #     print_red "---> [ERROR] Failed to reset CCU board"
+    #     exit $status_code
+    # fi
+    print_green "---> [OK]"
+}
