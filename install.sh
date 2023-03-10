@@ -26,6 +26,7 @@ install_tmux() {
 }
 
 install_vim() {
+    sudo apt install -y vim
     cp .vimrc ~/
     print_green "Installing Vim addons"
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
