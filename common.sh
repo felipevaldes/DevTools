@@ -25,3 +25,42 @@ print_dry() {
 }
 
 no_host_check="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+#------------Decoration-----------#
+anim=(
+  "${BLUE}•${GREEN}•${RED}•${MAGENTA}•    "
+  " ${GREEN}•${RED}•${MAGENTA}•${BLUE}•   "
+  "  ${RED}•${MAGENTA}•${BLUE}•${GREEN}•  "
+  "   ${MAGENTA}•${BLUE}•${GREEN}•${RED}• "
+  "    ${BLUE}•${GREEN}•${RED}•${MAGENTA}•"
+)
+
+start_animation() {
+  setterm -cursor off
+
+  (
+    while true; do
+      for i in {0..4}; do
+        echo -ne "\r\033[2K                         ${anim[i]}"
+        sleep 0.1
+      done
+
+      for i in {4..0}; do
+        echo -ne "\r\033[2K                         ${anim[i]}"
+        sleep 0.1
+      done
+    done
+  ) &
+
+  export ANIM_PID="${!}"
+}
+
+stop_animation() {
+  [[ -e "/proc/${ANIM_PID}" ]] && kill -13 "${ANIM_PID}"
+  setterm -cursor on
+}
+
+test() {
+    start_animation; sleep 5; stop_animation
+    echo
+}

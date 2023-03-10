@@ -1,4 +1,3 @@
-source common.sh
 
 no_host_check="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet"
 
