@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=RemNote
+Exec=sh -c "u=ls /home/fvaldesvalen/.local/bin/RemNote*.AppImage; $u"
+Terminal=false
+Type=Application
+Icon=/home/fvaldesvalen/.local/share/icons/remnote.png
+StartupWMClass=RemNote
+Comment=This is your brain extension
+Categories=Utility;
