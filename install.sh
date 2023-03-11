@@ -5,7 +5,7 @@ source common.sh
 
 configure_remnote() {
     print_blue "Configuring RemNote"
-    cp -p ./remnote/remnote.png ~/.local/share/icons/
+    sudo cp ./remnote/remnote.png /usr/share/icons/
     cp -p ./remnote/RemNote.desktop ~/.local/share/applications
     print_yellow "On a new terminal move your latest RemNote AppImage to ~/.local/bin/"
     wait_for_user
