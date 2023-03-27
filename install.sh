@@ -212,16 +212,16 @@ wait_for_user() {
 ###############################################################################
 #                                   MAIN                                      #
 ###############################################################################
-# configure_bash
-# configure_fonts
-# configure_xfce
+configure_bash
+configure_fonts
+configure_xfce
 
-# install_ulauncher
-# install_tabby
-# install_starship
-# install_plank
-# install_vim
-# install_tmux
+install_ulauncher
+install_tabby
+install_starship
+install_plank
+install_vim
+install_tmux
 configure_remnote
 
 print_green "Done"
