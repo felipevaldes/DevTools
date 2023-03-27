@@ -6,13 +6,14 @@ source common.sh
 configure_remnote() {
     print_blue "Configuring RemNote"
     sudo cp ./remnote/remnote.png /usr/share/icons/
-    cp -p ./remnote/RemNote.desktop ~/.local/share/applications
+    cp -p ./remnote/remnote.desktop ~/.local/share/applications
     print_yellow "On a new terminal move your latest RemNote AppImage to ~/.local/bin/"
     wait_for_user
     print_green "OK"
 }
 
 install_starship() {
+    print_blue "Installing Starship"
     temp=starship_temp
     mkdir ${temp}; cd ${temp}
     wget https://starship.rs/install.sh
@@ -25,6 +26,7 @@ install_starship() {
 }
 
 install_tmux() {
+    print_blue "Installing Tmux"
     sudo apt install -y tmux
     cp ./config_files/.tmux.conf ~/
     print_green "Installing Tmux addons"
@@ -35,6 +37,7 @@ install_tmux() {
 }
 
 install_vim() {
+    print_blue "Installing Vim"
     sudo apt install -y vim
     cp ./config_files/.vimrc ~/
     print_green "Installing Vim addons"
@@ -46,16 +49,19 @@ install_vim() {
 }
 
 install_ulauncher() {
+    print_blue "Installing Ulauncher"
     sudo add-apt-repository ppa:agornostal/ulauncher && sudo apt update && sudo apt install ulauncher
 }
 
 install_tabby() {
+    print_blue "Installing Tabby"
     curl -s https://packagecloud.io/install/repositories/eugeny/tabby/script.deb.sh | sudo bash
     sudo apt install -y tabby-terminal
     cp -p ./config_files/tabby_config.yaml ~/.config/tabby/config.yaml
 }
 
 configure_bash() {
+    print_blue "Configuring bash"
     cp ./config_files/.bash_aliases ~/
     cp ./config_files/.bashrc ~/
     source ~/.bashrc
@@ -80,6 +86,7 @@ configure_fonts() {
 }
 
 configure_xfce() {
+    print_blue "Configuring xfce"
     sudo apt install gtk2-engines-murrine
     git clone git@github.com:felipevaldes/WhiteSur-gtk-theme.git
     cd WhiteSur-gtk-theme
@@ -87,7 +94,7 @@ configure_xfce() {
     cd ../
     git clone git@github.com:felipevaldes/WhiteSur-icon-theme.git
     cd WhiteSur-icon-theme
-    ./install
+    ./install.sh
     cd ../
 
     print_blue "==================================================================="
@@ -205,15 +212,16 @@ wait_for_user() {
 ###############################################################################
 #                                   MAIN                                      #
 ###############################################################################
-configure_bash
-configure_fonts
-configure_xfce
+# configure_bash
+# configure_fonts
+# configure_xfce
 
-install_ulauncher
-install_tabby
-install_starship
-install_plank
-install_vim
-install_tmux
+# install_ulauncher
+# install_tabby
+# install_starship
+# install_plank
+# install_vim
+# install_tmux
+configure_remnote
 
 print_green "Done"
