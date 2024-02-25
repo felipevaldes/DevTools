@@ -28,7 +28,7 @@ no_host_check="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
 
 prompt_yes_no() {
-  while true do;
+  while true; do
     read -p "$1 (y/n): " yn
     case $yn in
       [Yy]* ) return 0;;
