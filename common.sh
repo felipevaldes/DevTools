@@ -26,6 +26,18 @@ print_dry() {
 
 no_host_check="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
+
+prompt_yes_no() {
+  while true do;
+    read -p "$1 (y/n): " yn
+    case $yn in
+      [Yy]* ) return 0;;
+      [Nn]* ) return 1;;
+      * ) echo "Please answer yes or no.";;
+    esac
+  done
+}
+
 #------------Decoration-----------#
 anim=(
   "${BLUE}•${GREEN}•${RED}•${MAGENTA}•    "
