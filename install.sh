@@ -2,6 +2,8 @@
 
 source common.sh
 
+WDIR="/tmp/felipe_install"
+
 
 configure_remnote() {
     print_blue "Configuring RemNote"
@@ -53,6 +55,13 @@ install_ulauncher() {
     sudo add-apt-repository ppa:agornostal/ulauncher && sudo apt update && sudo apt install ulauncher
 }
 
+install_albert() {
+    print blue "Insyalling Albert laubcher"
+    echo 'deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/home:manuelschneid3r.list
+    curl -fsSL https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_manuelschneid3r.gpg > /dev/null
+    sudo apt update && sudo apt install albert
+}
+
 install_tabby() {
     print_blue "Installing Tabby"
     curl -s https://packagecloud.io/install/repositories/eugeny/tabby/script.deb.sh | sudo bash
@@ -83,6 +92,61 @@ configure_fonts() {
     cp -r ./xfce_config/fonts/* ~/.local/share/fonts/
     print_green "OK"
     echo
+}
+
+configure_cinnamon() {
+    sudo apt install libcanberra-gtk-module libglib2.0-dev libxml2-utils shotwell
+    print_blue "Configuring Cinnamon"
+    mkdir -p $WDIR
+    cp -r cinnamon $WDIR/
+    cd $WDIR
+    print_blue "Installing GTK themes..."
+    git clone git@github.com:felipevaldes/WhiteSur-gtk-theme.git
+    cd WhiteSur-gtk-theme
+    sudo ./install.sh
+    cd ../
+    print_blue "Installing icon themes..."
+    git clone git@github.com:felipevaldes/WhiteSur-icon-theme.git
+    cd WhiteSur-icon-theme
+    sudo ./install.sh
+    cd ../
+    print_blue "Installing cursor themes..."
+    git clone git@github.com:felipevaldes/McMojave-cursors.git
+    cd McMojave-cursors
+    sudo ./install.sh
+    cd ../
+
+    print_blue "==================================================================="
+    echo
+    print_yellow "System Settings/Windows..."
+    print_yellow "...in Alt-Tab: "
+    show_image_and_wait ./cinnamon/config_pictures/windows_alt_tab.png
+    echo
+
+    print_blue "==================================================================="
+    echo
+    print_yellow "System Settings/Hot Corners: Configure as needed"
+    echo
+
+    print_blue "==================================================================="
+    echo
+    print_yellow "System Settings/Extensions..."
+    print_yellow "...in Download: "
+    print_yellow " - download Transparent Panels"
+    print_yellow "...in Manage: "
+    print_yellow " - Enable Transparent Panels by clicking in the plus sign at the bottom of the window"
+    print_yellow " - Click in the gears to configure the panel..."
+    show_image_and_wait ./cinnamon/config_pictures/extensions_transparent_panels.png
+    echo
+
+    print_blue "==================================================================="
+    echo
+    print_yellow "System Settings/Themes..."
+    print_yellow "...in Themes: Open the Advanced view and configure as needed or use the image as reference "
+    show_image_and_wait ./cinnamon/config_pictures/themes_themes.png
+    echo
+    return
+
 }
 
 configure_xfce() {
@@ -185,7 +249,6 @@ configure_xfce() {
     echo
 
     print_blue "==================================================================="
-
 }
 
 show_image_and_wait() {
@@ -212,16 +275,77 @@ wait_for_user() {
 ###############################################################################
 #                                   MAIN                                      #
 ###############################################################################
-configure_bash
-configure_fonts
-configure_xfce
+if prompt_yes_no "Do you want to configure xfce?"; then
+    configure_xfce
+else
+    echo "Skipping xfce configuration..."
+fi
 
-install_ulauncher
-install_tabby
-install_starship
-install_plank
-install_vim
-install_tmux
-configure_remnote
+if prompt_yes_no "Do you want to configure Cinnamon?"; then
+    configure_cinnamon
+else
+    echo "Skipping Cinnamon configuration..."
+fi
+
+if prompt_yes_no "Do you want to configure bash?"; then
+    configure_bash
+else
+    echo "Skipping bash configuration..."
+fi
+
+if prompt_yes_no "Do you want to install fonts?"; then
+    configure_fonts
+else
+    echo "Skipping font installation..."
+fi
+
+
+if prompt_yes_no "Do you want to install ulauncher?"; then
+    configure_ulancher
+else
+    echo "Skipping font installation..."
+fi
+
+if prompt_yes_no "Do you want to install tabby?"; then
+    install_tabby
+else
+    echo "Skipping tabby installation..."
+fi
+
+if prompt_yes_no "Do you want to install starship?"; then
+    install_starship
+else
+    echo "Skipping starship installation..."
+fi
+
+if prompt_yes_no "Do you want to install plank?"; then
+    install_plank
+else
+    echo "Skipping plank installation..."
+fi
+
+if prompt_yes_no "Do you want to install albert launcher?"; then
+    install_albert
+else
+    echo "Skipping albert launcher installation..."
+fi
+
+if prompt_yes_no "Do you want to configure vim?"; then
+    install_vim
+else
+    echo "Skipping vim configuration..."
+fi
+
+if prompt_yes_no "Do you want to configure tmux?"; then
+    install_tmux
+else
+    echo "Skipping vim configuration..."
+fi
+
+if prompt_yes_no "Do you want to configure remnote?"; then
+    configure_remnote
+else
+    echo "Skipping remnote configuration..."
+fi
 
 print_green "Done"
