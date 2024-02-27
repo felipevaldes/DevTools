@@ -7,6 +7,7 @@ current_path=$(pwd)
 
 
 configure_remnote() {
+    cd $current_path
     print_blue "Configuring RemNote"
     sudo cp ./remnote/remnote.png /usr/share/icons/
     cp -p ./remnote/remnote.desktop ~/.local/share/applications
@@ -16,6 +17,7 @@ configure_remnote() {
 }
 
 install_starship() {
+    cd $WDIR
     print_blue "Installing Starship"
     temp=starship_temp
     mkdir ${temp}; cd ${temp}
@@ -29,6 +31,7 @@ install_starship() {
 }
 
 install_tmux() {
+    cd $current_path
     print_blue "Installing Tmux"
     sudo apt install -y tmux
     cp ./config_files/.tmux.conf ~/
@@ -40,6 +43,7 @@ install_tmux() {
 }
 
 install_vim() {
+    cd $current_path
     print_blue "Installing Vim"
     sudo apt install -y vim
     cp ./config_files/.vimrc ~/
@@ -57,10 +61,19 @@ install_ulauncher() {
 }
 
 install_albert() {
+    cd $WDIR
     print_blue "Installing Albert laubcher"
-    sudo nala install libQt6Widgets.so.6
+    sudo nala install libqt6widgets6
     wget https://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/amd64/albert_0.22.17-0+597.1_amd64.deb
     sudo dpkg -i albert_0.22.17-0+597.1_amd64.deb
+    cd $current_path
+    cp config_files/albert_themes/BigSur_Dark.qss.zip $WDIR
+    cp config_files/albert_themes/BigSur_White.qss.zip $WDIR
+    cd $WDIR
+    unzip BigSur_Dark.qss.zip
+    unzip BigSur_White.qss.zip
+    sudo cp BigSur_Dark.qss /usr/share/albert/widgetsboxmodel/themes/BigSur_Dark.qss
+    sudo cp BigSur_White.qss /usr/share/albert/widgetsboxmodel/themes/BigSur_White.qss
 }
 
 install_tabby() {
@@ -99,6 +112,16 @@ configure_fonts() {
     cp -r ./fonts/* ~/.local/share/fonts/
     print_green "OK"
     echo
+}
+
+install_wallpapers() {
+    cd $current_path
+    sudo mkdir -p /usr/share/backgrounds/big_sur/
+    sudo cp ./wallpapers/BigSurWallpapers4K.zip /usr/share/backgrounds/big_sur/
+    cd /usr/share/backgrounds/big_sur/
+    sudo unzip BigSurWallpapers4K.zip
+    sudo rm BigSurWallpapers4K.zip
+    sudo rm -rf __MACOSX
 }
 
 configure_cinnamon() {
@@ -305,19 +328,24 @@ wait_for_user() {
 # else
 #     echo "Skipping xfce configuration..."
 # fi
-
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to configure Cinnamon?"; then
     configure_cinnamon
 else
     echo "Skipping Cinnamon configuration..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to configure bash?"; then
     configure_bash
 else
     echo "Skipping bash configuration..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to install fonts?"; then
     configure_fonts
 else
@@ -330,42 +358,64 @@ fi
 #     echo "Skipping font installation..."
 # fi
 
+print_blue "==================================================================="
+echo
+if prompt_yes_no "Do you want to install Big Sur Wallpapers?"; then
+    install_wallpapers
+else
+    echo "Skipping Big Sur Wallpaper installation..."
+fi
+
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to install tabby?"; then
     install_tabby
 else
     echo "Skipping tabby installation..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to install starship?"; then
     install_starship
 else
     echo "Skipping starship installation..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to install plank?"; then
     install_plank
 else
     echo "Skipping plank installation..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to install albert launcher?"; then
     install_albert
 else
     echo "Skipping albert launcher installation..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to configure vim?"; then
     install_vim
 else
     echo "Skipping vim configuration..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to configure tmux?"; then
     install_tmux
 else
     echo "Skipping vim configuration..."
 fi
 
+print_blue "==================================================================="
+echo
 if prompt_yes_no "Do you want to configure remnote?"; then
     configure_remnote
 else
