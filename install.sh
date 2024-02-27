@@ -57,13 +57,14 @@ install_ulauncher() {
 }
 
 install_albert() {
-    print blue "Insyalling Albert laubcher"
-    echo 'deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/home:manuelschneid3r.list
-    curl -fsSL https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_manuelschneid3r.gpg > /dev/null
-    sudo apt update && sudo apt install albert
+    print_blue "Installing Albert laubcher"
+    sudo nala install libQt6Widgets.so.6
+    wget https://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/amd64/albert_0.22.17-0+597.1_amd64.deb
+    sudo dpkg -i albert_0.22.17-0+597.1_amd64.deb
 }
 
 install_tabby() {
+    cd $current_path
     print_blue "Installing Tabby"
     curl -s https://packagecloud.io/install/repositories/eugeny/tabby/script.deb.sh | sudo bash
     sudo apt install -y tabby-terminal
@@ -82,6 +83,7 @@ install_plank() {
     cd $WDIR
     print_blue "Installing Plank"
     sudo apt install -y plank
+    mkdir -p ~/.local/share/plank/themes/
     cp -r ./WhiteSur-gtk-theme/src/other/plank/theme-Dark/ ~/.local/share/plank/themes/
     cp -r ./WhiteSur-gtk-theme/src/other/plank/theme-Light/ ~/.local/share/plank/themes/
     print_yellow "Open a new terminal and run plank --preferences to set the theme"
@@ -92,7 +94,7 @@ install_plank() {
 
 configure_fonts() {
     cd $current_path
-    print_blue "Installing Fonts"
+    print_blue "Installing Fonts" 
     mkdir -p ~/.local/share/fonts
     cp -r ./fonts/* ~/.local/share/fonts/
     print_green "OK"
@@ -159,11 +161,15 @@ configure_cinnamon() {
     print_yellow " - move the panel to the top"
     print_yellow " - set panel to Edit mode"
     print_yellow " - remove Grouped Window List if so desired"
+    print_yellow " - remove separator next to menu in the top left"
+    print_yellow " - remove main menu in top left"
+    print_yellow " - remove corner bar in the right"
+    print_yellow " - modify date format"
     print_yellow " - add user applet (download if needed)"
-    print_yellow " - add weather applet (download if needed)"
+    print_yellow " - add and configure weather applet (download if needed)"
     print_yellow " - add scale applet (download if needed)"
     print_yellow " - add expo applet (download if needed)"
-    print_yellow " - add Cinnamenu applet and configure it"
+    print_yellow " - add Cinnamenu and configure applet and configure it"
     echo
     press_enter_to_continue
 }
