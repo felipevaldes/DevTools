@@ -38,6 +38,10 @@ prompt_yes_no() {
   done
 }
 
+press_enter_to_continue() {
+  read -p "$1 Press ENTER to continue..." dummy
+}
+
 #------------Decoration-----------#
 anim=(
   "${BLUE}•${GREEN}•${RED}•${MAGENTA}•    "

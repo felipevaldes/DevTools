@@ -3,6 +3,7 @@
 source common.sh
 
 WDIR="/tmp/felipe_install"
+current_path=$(pwd)
 
 
 configure_remnote() {
@@ -70,6 +71,7 @@ install_tabby() {
 }
 
 configure_bash() {
+    cd $current_path
     print_blue "Configuring bash"
     cp ./config_files/.bash_aliases ~/
     cp ./config_files/.bashrc ~/
@@ -77,6 +79,7 @@ configure_bash() {
 }
 
 install_plank() {
+    cd $WDIR
     print_blue "Installing Plank"
     sudo apt install -y plank
     cp -r ./WhiteSur-gtk-theme/src/other/plank/theme-Dark/ ~/.local/share/plank/themes/
@@ -84,12 +87,14 @@ install_plank() {
     print_yellow "Open a new terminal and run plank --preferences to set the theme"
     print_green "OK"
     echo
+    press_enter_to_continue
 }
 
 configure_fonts() {
+    cd $current_path
     print_blue "Installing Fonts"
     mkdir -p ~/.local/share/fonts
-    cp -r ./xfce_config/fonts/* ~/.local/share/fonts/
+    cp -r ./fonts/* ~/.local/share/fonts/
     print_green "OK"
     echo
 }
@@ -127,6 +132,8 @@ configure_cinnamon() {
     echo
     print_yellow "System Settings/Hot Corners: Configure as needed"
     echo
+    press_enter_to_continue
+
 
     print_blue "==================================================================="
     echo
@@ -145,8 +152,20 @@ configure_cinnamon() {
     print_yellow "...in Themes: Open the Advanced view and configure as needed or use the image as reference "
     show_image_and_wait ./cinnamon/config_pictures/themes_themes.png
     echo
-    return
 
+    print_blue "==================================================================="
+    echo
+    print_yellow "Panel Configuration..."
+    print_yellow " - move the panel to the top"
+    print_yellow " - set panel to Edit mode"
+    print_yellow " - remove Grouped Window List if so desired"
+    print_yellow " - add user applet (download if needed)"
+    print_yellow " - add weather applet (download if needed)"
+    print_yellow " - add scale applet (download if needed)"
+    print_yellow " - add expo applet (download if needed)"
+    print_yellow " - add Cinnamenu applet and configure it"
+    echo
+    press_enter_to_continue
 }
 
 configure_xfce() {
@@ -275,11 +294,11 @@ wait_for_user() {
 ###############################################################################
 #                                   MAIN                                      #
 ###############################################################################
-if prompt_yes_no "Do you want to configure xfce?"; then
-    configure_xfce
-else
-    echo "Skipping xfce configuration..."
-fi
+# if prompt_yes_no "Do you want to configure xfce?"; then
+#     configure_xfce
+# else
+#     echo "Skipping xfce configuration..."
+# fi
 
 if prompt_yes_no "Do you want to configure Cinnamon?"; then
     configure_cinnamon
@@ -299,12 +318,11 @@ else
     echo "Skipping font installation..."
 fi
 
-
-if prompt_yes_no "Do you want to install ulauncher?"; then
-    configure_ulancher
-else
-    echo "Skipping font installation..."
-fi
+# if prompt_yes_no "Do you want to install ulauncher?"; then
+#     configure_ulancher
+# else
+#     echo "Skipping font installation..."
+# fi
 
 if prompt_yes_no "Do you want to install tabby?"; then
     install_tabby
