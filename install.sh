@@ -60,22 +60,6 @@ install_ulauncher() {
     sudo add-apt-repository ppa:agornostal/ulauncher && sudo apt update && sudo apt install ulauncher
 }
 
-install_albert() {
-    cd $WDIR
-    print_blue "Installing Albert laubcher"
-    sudo nala install libqt6widgets6
-    wget https://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/amd64/albert_0.22.17-0+597.1_amd64.deb
-    sudo dpkg -i albert_0.22.17-0+597.1_amd64.deb
-    cd $current_path
-    cp config_files/albert_themes/BigSur_Dark.qss.zip $WDIR
-    cp config_files/albert_themes/BigSur_White.qss.zip $WDIR
-    cd $WDIR
-    unzip BigSur_Dark.qss.zip
-    unzip BigSur_White.qss.zip
-    sudo cp BigSur_Dark.qss /usr/share/albert/widgetsboxmodel/themes/BigSur_Dark.qss
-    sudo cp BigSur_White.qss /usr/share/albert/widgetsboxmodel/themes/BigSur_White.qss
-}
-
 install_tabby() {
     cd $current_path
     print_blue "Installing Tabby"
@@ -352,11 +336,13 @@ else
     echo "Skipping font installation..."
 fi
 
-# if prompt_yes_no "Do you want to install ulauncher?"; then
-#     configure_ulancher
-# else
-#     echo "Skipping font installation..."
-# fi
+print_blue "==================================================================="
+echo
+if prompt_yes_no "Do you want to install ulauncher?"; then
+    install_ulauncher
+else
+    echo "Skipping font installation..."
+fi
 
 print_blue "==================================================================="
 echo
@@ -388,14 +374,6 @@ if prompt_yes_no "Do you want to install plank?"; then
     install_plank
 else
     echo "Skipping plank installation..."
-fi
-
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to install albert launcher?"; then
-    install_albert
-else
-    echo "Skipping albert launcher installation..."
 fi
 
 print_blue "==================================================================="
