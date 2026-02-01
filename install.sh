@@ -1,403 +1,411 @@
 #!/bin/bash
+#
+# Ubuntu Cinnamon System Configuration Script
+# Designed for fresh Ubuntu Cinnamon installations
+#
 
+set -euo pipefail  # Exit on error, undefined vars, pipe failures
+
+# Source common utilities
 source common.sh
 
-WDIR="/tmp/felipe_install"
-current_path=$(pwd)
+# Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+INSTALL_LOG="${HOME}/.config/devtools_install.log"
+CHANGES_LOG="${HOME}/.config/devtools_changes.log"
 
-
-configure_remnote() {
-    cd $current_path
-    print_blue "Configuring RemNote"
-    sudo cp ./remnote/remnote.png /usr/share/icons/
-    cp -p ./remnote/remnote.desktop ~/.local/share/applications
-    print_yellow "On a new terminal move your latest RemNote AppImage to ~/.local/bin/"
-    wait_for_user
-    print_green "OK"
+# Initialize logging
+init_logging() {
+    mkdir -p "$(dirname "$INSTALL_LOG")"
+    mkdir -p "$(dirname "$CHANGES_LOG")"
+    echo "=== Installation started at $(date) ===" >> "$INSTALL_LOG"
+    echo "=== Changes log started at $(date) ===" >> "$CHANGES_LOG"
 }
 
-install_starship() {
-    cd $WDIR
-    print_blue "Installing Starship"
-    temp=starship_temp
-    mkdir ${temp}; cd ${temp}
-    wget https://starship.rs/install.sh
-    mkdir -p ~/.local/bin/
-    chmod +x install.sh
-    ./install.sh --bin-dir ~/.local/bin/
-    cd ../; rm -rf ${temp}
-    cp -p ./config_files/starship.toml ~/.config/
-    return 0
+# Log a change for rollback tracking
+log_change() {
+    local change_type="$1"
+    local description="$2"
+    local details="${3:-}"
+    echo "[$(date +%Y-%m-%d\ %H:%M:%S)] [$change_type] $description | $details" >> "$CHANGES_LOG"
 }
 
-install_tmux() {
-    cd $current_path
-    print_blue "Installing Tmux"
-    sudo apt install -y tmux
-    cp ./config_files/.tmux.conf ~/
-    print_green "Installing Tmux addons"
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-    print_yellow "Open a new terminal, run tmux and execute tmux source ~/.tmux.conf"
-    print_yellow "Then do [prefix] + I to install all plugins"
+# Check if running on Ubuntu Cinnamon
+check_system() {
+    if [ ! -f /etc/os-release ]; then
+        print_red "Cannot detect system. This script is designed for Ubuntu Cinnamon."
+        exit 1
+    fi
+    
+    source /etc/os-release
+    if [[ "$ID" != "ubuntu" ]]; then
+        print_yellow "Warning: This script is designed for Ubuntu. Detected: $ID"
+        if ! prompt_yes_no "Continue anyway?"; then
+            exit 1
+        fi
+    fi
+    
+    if ! command -v cinnamon-settings &> /dev/null; then
+        print_yellow "Warning: Cinnamon desktop environment not detected."
+        if ! prompt_yes_no "Continue anyway?"; then
+            exit 1
+        fi
+    fi
+    
+    print_green "System check passed: $PRETTY_NAME"
 }
 
-install_vim() {
-    cd $current_path
-    print_blue "Installing Vim"
-    sudo apt install -y vim
-    cp ./config_files/.vimrc ~/
-    print_green "Installing Vim addons"
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    mkdir ~/.vim/backups
-    mkdir ~/.vim/swaps
-    print_yellow "Open a new terminal, run vim, and execute :PluginInstall"
-    wait_for_user
+# Update system packages
+update_system() {
+    print_blue "Updating system packages..."
+    sudo apt update -qq
+    log_change "SYSTEM" "Updated package lists"
+    print_green "System updated"
 }
 
-install_ulauncher() {
-    print_blue "Installing Ulauncher"
-    sudo add-apt-repository ppa:agornostal/ulauncher && sudo apt update && sudo apt install ulauncher
-}
-
-install_tabby() {
-    cd $current_path
-    print_blue "Installing Tabby"
-    curl -s https://packagecloud.io/install/repositories/eugeny/tabby/script.deb.sh | sudo bash
-    sudo apt install -y tabby-terminal
-    cp -p ./config_files/tabby_config.yaml ~/.config/tabby/config.yaml
-}
-
-configure_bash() {
-    cd $current_path
-    print_blue "Configuring bash"
-    cp ./config_files/.bash_aliases ~/
-    cp ./config_files/.bashrc ~/
-    source ~/.bashrc
-}
-
-install_plank() {
-    cd $WDIR
-    print_blue "Installing Plank"
-    sudo apt install -y plank
-    mkdir -p ~/.local/share/plank/themes/
-    cp -r ./WhiteSur-gtk-theme/src/other/plank/theme-Dark/ ~/.local/share/plank/themes/
-    cp -r ./WhiteSur-gtk-theme/src/other/plank/theme-Light/ ~/.local/share/plank/themes/
-    print_yellow "Open a new terminal and run plank --preferences to set the theme"
-    print_green "OK"
-    echo
-    press_enter_to_continue
-}
-
-configure_fonts() {
-    cd $current_path
-    print_blue "Installing Fonts" 
-    mkdir -p ~/.local/share/fonts
-    cp -r ./fonts/* ~/.local/share/fonts/
-    print_green "OK"
-    echo
-}
-
-install_wallpapers() {
-    cd $current_path
-    sudo mkdir -p /usr/share/backgrounds/big_sur/
-    sudo cp ./wallpapers/BigSurWallpapers4K.zip /usr/share/backgrounds/big_sur/
-    cd /usr/share/backgrounds/big_sur/
-    sudo unzip BigSurWallpapers4K.zip
-    sudo rm BigSurWallpapers4K.zip
-    sudo rm -rf __MACOSX
-}
-
-configure_cinnamon() {
-    sudo apt install libcanberra-gtk-module libglib2.0-dev libxml2-utils shotwell
-    print_blue "Configuring Cinnamon"
-    mkdir -p $WDIR
-    cp -r cinnamon $WDIR/
-    cd $WDIR
-    print_blue "Installing GTK themes..."
-    git clone git@github.com:felipevaldes/WhiteSur-gtk-theme.git
-    cd WhiteSur-gtk-theme
-    sudo ./install.sh
-    cd ../
-    print_blue "Installing icon themes..."
-    git clone git@github.com:felipevaldes/WhiteSur-icon-theme.git
-    cd WhiteSur-icon-theme
-    sudo ./install.sh
-    cd ../
-    print_blue "Installing cursor themes..."
-    git clone git@github.com:felipevaldes/McMojave-cursors.git
-    cd McMojave-cursors
-    sudo ./install.sh
-    cd ../
-
-    print_blue "==================================================================="
-    echo
-    print_yellow "System Settings/Windows..."
-    print_yellow "...in Alt-Tab: "
-    show_image_and_wait ./cinnamon/config_pictures/windows_alt_tab.png
-    echo
-
-    print_blue "==================================================================="
-    echo
-    print_yellow "System Settings/Hot Corners: Configure as needed"
-    echo
-    press_enter_to_continue
-
-
-    print_blue "==================================================================="
-    echo
-    print_yellow "System Settings/Extensions..."
-    print_yellow "...in Download: "
-    print_yellow " - download Transparent Panels"
-    print_yellow "...in Manage: "
-    print_yellow " - Enable Transparent Panels by clicking in the plus sign at the bottom of the window"
-    print_yellow " - Click in the gears to configure the panel..."
-    show_image_and_wait ./cinnamon/config_pictures/extensions_transparent_panels.png
-    echo
-
-    print_blue "==================================================================="
-    echo
-    print_yellow "System Settings/Themes..."
-    print_yellow "...in Themes: Open the Advanced view and configure as needed or use the image as reference "
-    show_image_and_wait ./cinnamon/config_pictures/themes_themes.png
-    echo
-
-    print_blue "==================================================================="
-    echo
-    print_yellow "Panel Configuration..."
-    print_yellow " - move the panel to the top"
-    print_yellow " - set panel to Edit mode"
-    print_yellow " - remove Grouped Window List if so desired"
-    print_yellow " - remove separator next to menu in the top left"
-    print_yellow " - remove main menu in top left"
-    print_yellow " - remove corner bar in the right"
-    print_yellow " - modify date format"
-    print_yellow " - add user applet (download if needed)"
-    print_yellow " - add and configure weather applet (download if needed)"
-    print_yellow " - add scale applet (download if needed)"
-    print_yellow " - add expo applet (download if needed)"
-    print_yellow " - add Cinnamenu and configure applet and configure it"
-    echo
-    press_enter_to_continue
-}
-
-configure_xfce() {
-    print_blue "Configuring xfce"
-    sudo apt install gtk2-engines-murrine
-    git clone git@github.com:felipevaldes/WhiteSur-gtk-theme.git
-    cd WhiteSur-gtk-theme
-    ./install.sh -c Dark -t all
-    cd ../
-    git clone git@github.com:felipevaldes/WhiteSur-icon-theme.git
-    cd WhiteSur-icon-theme
-    ./install.sh
-    cd ../
-
-    print_blue "==================================================================="
-
-    echo
-    print_yellow "Open Appearance..."
-    print_yellow "...in Style:"
-    show_image_and_wait ./xfce_config/config_pictures/Appearance_Style.png
-    print_yellow "...in Icons:"
-    show_image_and_wait ./xfce_config/config_pictures/Appearance_Icons.png
-    print_yellow "...in Fonts:"
-    show_image_and_wait ./xfce_config/config_pictures/Appearance_Fonts.png
-    print_yellow "...in Settings:"
-    show_image_and_wait ./xfce_config/config_pictures/Appearance_Settings.png
-    echo
-
-    print_blue "==================================================================="
-
-    echo
-    print_yellow "Open Window Manager..."
-    print_yellow "...in Style:"
-    show_image_and_wait ./xfce_config/config_pictures/WindowManager_Style.png
-
-    print_yellow "...in Keyboard:"
-    show_image_and_wait ./xfce_config/config_pictures/WindowManager_Keyboard.png
-
-    print_yellow "...in Focus:"
-    show_image_and_wait ./xfce_config/config_pictures/WindowManager_Focus.png
-
-    print_yellow "...in Advanced:"
-    show_image_and_wait ./xfce_config/config_pictures/WindowManager_Advanced.png
-    echo
-
-    print_blue "==================================================================="
-
-    echo
-    print_yellow "Open Window Manager Tweaks..."
-    print_yellow "...in Cycling:"
-    show_image_and_wait ./xfce_config/config_pictures/WMTweaks_Cycling.png
-
-    print_yellow "...in Focus:"
-    show_image_and_wait ./xfce_config/config_pictures/WMTweaks_Focus.png
-
-    print_yellow "...in Accessibility:"
-    show_image_and_wait ./xfce_config/config_pictures/WMTweaks_Accessibility.png
-
-    print_yellow "...in Workspaces:"
-    show_image_and_wait ./xfce_config/config_pictures/WMTweaks_Workspaces.png
-
-    print_yellow "...in Placement:"
-    show_image_and_wait ./xfce_config/config_pictures/WMTweaks_Placement.png
-
-    print_yellow "...in Compositor:"
-    show_image_and_wait ./xfce_config/config_pictures/WMTweaks_Compositor.png
-    echo
-
-    print_blue "==================================================================="
-
-    echo
-    print_yellow "Open Desktop..."
-    print_yellow "...in Menus:"
-    show_image_and_wait ./xfce_config/config_pictures/Desktop_Menus.png
-
-    print_yellow "...in Icons:"
-    show_image_and_wait ./xfce_config/config_pictures/Desktop_Icons.png
-    echo
-
-    print_blue "==================================================================="
-
-    echo
-    print_yellow "Open Panel..."
-    print_yellow "...in Display:"
-    show_image_and_wait ./xfce_config/config_pictures/Panel_Display.png
-
-    print_yellow "...in Appearance:"
-    show_image_and_wait ./xfce_config/config_pictures/Panel_Appearance.png
-
-    print_yellow "...in Items:"
-    show_image_and_wait ./xfce_config/config_pictures/Panel_Items.png
-    echo
-
-    print_blue "==================================================================="
-
-    echo
-    print_yellow "Open Keyboard..."
-    print_yellow "...in Application Shortcuts:"
-    show_image_and_wait ./xfce_config/config_pictures/Keyboard_AS.png
-    echo
-
-    print_blue "==================================================================="
-}
-
-show_image_and_wait() {
-    print_yellow "      use the image as reference and then close to continue."
-    start_animation
-    shotwell $1
-    stop_animation
-    echo
-}
-
-wait_for_user() {
-    print_yellow "Press any key when you are done..."
-    start_animation
-    while [ true ] ; do
-        read -t 3 -n 1
-        if [ $? = 0 ] ; then
-            break ;
+# Install system dependencies
+install_dependencies() {
+    print_blue "Installing system dependencies..."
+    
+    local packages=(
+        "libcanberra-gtk-module"
+        "libglib2.0-dev"
+        "libxml2-utils"
+        "shotwell"
+        "git"
+        "curl"
+        "wget"
+        "unzip"
+        "build-essential"
+    )
+    
+    for package in "${packages[@]}"; do
+        if ! dpkg -l | grep -q "^ii  $package "; then
+            sudo apt install -y "$package" >> "$INSTALL_LOG" 2>&1
+            log_change "PACKAGE" "Installed package" "$package"
+            print_green "  Installed: $package"
+        else
+            print_yellow "  Already installed: $package"
         fi
     done
-    stop_animation
+    
+    print_green "Dependencies installed"
 }
 
+# Install fonts
+install_fonts() {
+    print_blue "Installing custom fonts..."
+    
+    local fonts_dir="${HOME}/.local/share/fonts"
+    mkdir -p "$fonts_dir"
+    
+    if [ -d "${SCRIPT_DIR}/fonts" ]; then
+        cp -r "${SCRIPT_DIR}/fonts"/* "$fonts_dir/"
+        log_change "FONTS" "Installed fonts" "${SCRIPT_DIR}/fonts -> $fonts_dir"
+        
+        # Refresh font cache
+        fc-cache -fv >> "$INSTALL_LOG" 2>&1
+        print_green "Fonts installed and cache refreshed"
+    else
+        print_yellow "Fonts directory not found, skipping..."
+    fi
+}
 
-###############################################################################
-#                                   MAIN                                      #
-###############################################################################
-# if prompt_yes_no "Do you want to configure xfce?"; then
-#     configure_xfce
-# else
-#     echo "Skipping xfce configuration..."
-# fi
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to configure Cinnamon?"; then
-    configure_cinnamon
-else
-    echo "Skipping Cinnamon configuration..."
-fi
+# Install wallpapers
+install_wallpapers() {
+    print_blue "Installing wallpapers..."
+    
+    local wallpaper_source="${SCRIPT_DIR}/wallpapers/BigSurWallpapers4K.zip"
+    local wallpaper_dest="/usr/share/backgrounds/big_sur"
+    
+    if [ -f "$wallpaper_source" ]; then
+        sudo mkdir -p "$wallpaper_dest"
+        sudo cp "$wallpaper_source" "$wallpaper_dest/"
+        cd "$wallpaper_dest"
+        sudo unzip -q BigSurWallpapers4K.zip
+        sudo rm BigSurWallpapers4K.zip
+        sudo rm -rf __MACOSX 2>/dev/null || true
+        
+        log_change "WALLPAPERS" "Installed wallpapers" "$wallpaper_dest"
+        print_green "Wallpapers installed"
+    else
+        print_yellow "Wallpaper file not found, skipping..."
+    fi
+}
 
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to configure bash?"; then
-    configure_bash
-else
-    echo "Skipping bash configuration..."
-fi
+# Install and configure shell tools
 
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to install fonts?"; then
-    configure_fonts
-else
-    echo "Skipping font installation..."
-fi
+() {
+    print_blue "Installing shell tools..."
+    
+    # Bash configuration
+    if [ -f "${SCRIPT_DIR}/config_files/.bashrc" ]; then
+        cp "${SCRIPT_DIR}/config_files/.bashrc" "${HOME}/.bashrc"
+        log_change "CONFIG" "Installed .bashrc" "${HOME}/.bashrc"
+    fi
+    
+    if [ -f "${SCRIPT_DIR}/config_files/.bash_aliases" ]; then
+        cp "${SCRIPT_DIR}/config_files/.bash_aliases" "${HOME}/.bash_aliases"
+        log_change "CONFIG" "Installed .bash_aliases" "${HOME}/.bash_aliases"
+    fi
+    
+    # Starship prompt
+    if [ -f "${SCRIPT_DIR}/config_files/starship.toml" ]; then
+        if ! command -v starship &> /dev/null; then
+            print_blue "  Installing Starship..."
+            local temp_dir=$(mktemp -d)
+            cd "$temp_dir"
+            wget -q https://starship.rs/install.sh
+            chmod +x install.sh
+            mkdir -p "${HOME}/.local/bin"
+            ./install.sh --bin-dir "${HOME}/.local/bin" -y >> "$INSTALL_LOG" 2>&1
+            cd - > /dev/null
+            rm -rf "$temp_dir"
+            log_change "TOOL" "Installed Starship" "${HOME}/.local/bin/starship"
+        fi
+        
+        mkdir -p "${HOME}/.config"
+        cp "${SCRIPT_DIR}/config_files/starship.toml" "${HOME}/.config/starship.toml"
+        log_change "CONFIG" "Installed starship.toml" "${HOME}/.config/starship.toml"
+    fi
+    
+    print_green "Shell tools configured"
+}
 
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to install ulauncher?"; then
-    install_ulauncher
-else
-    echo "Skipping font installation..."
-fi
+# Install terminal applications
+install_terminal_apps() {
+    print_blue "Installing terminal applications..."
+    
+    # Tmux
+    if ! command -v tmux &> /dev/null; then
+        sudo apt install -y tmux >> "$INSTALL_LOG" 2>&1
+        log_change "PACKAGE" "Installed tmux" "tmux"
+    fi
+    
+    if [ -f "${SCRIPT_DIR}/config_files/.tmux.conf" ]; then
+        cp "${SCRIPT_DIR}/config_files/.tmux.conf" "${HOME}/.tmux.conf"
+        log_change "CONFIG" "Installed .tmux.conf" "${HOME}/.tmux.conf"
+        
+        # Install TPM if not exists
+        if [ ! -d "${HOME}/.tmux/plugins/tpm" ]; then
+            git clone -q https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
+            log_change "TOOL" "Installed TPM" "${HOME}/.tmux/plugins/tpm"
+        fi
+    fi
+    
+    # Vim
+    if ! command -v vim &> /dev/null; then
+        sudo apt install -y vim >> "$INSTALL_LOG" 2>&1
+        log_change "PACKAGE" "Installed vim" "vim"
+    fi
+    
+    if [ -f "${SCRIPT_DIR}/config_files/.vimrc" ]; then
+        cp "${SCRIPT_DIR}/config_files/.vimrc" "${HOME}/.vimrc"
+        log_change "CONFIG" "Installed .vimrc" "${HOME}/.vimrc"
+        
+        # Install Vundle if not exists
+        if [ ! -d "${HOME}/.vim/bundle/Vundle.vim" ]; then
+            git clone -q https://github.com/VundleVim/Vundle.vim.git "${HOME}/.vim/bundle/Vundle.vim"
+            log_change "TOOL" "Installed Vundle" "${HOME}/.vim/bundle/Vundle.vim"
+        fi
+        
+        # Create vim directories
+        mkdir -p "${HOME}/.vim/backups" "${HOME}/.vim/swaps"
+    fi
+    
+    # Tabby terminal
+    if ! command -v tabby &> /dev/null; then
+        print_blue "  Installing Tabby..."
+        curl -s https://packagecloud.io/install/repositories/eugeny/tabby/script.deb.sh | sudo bash >> "$INSTALL_LOG" 2>&1
+        sudo apt install -y tabby-terminal >> "$INSTALL_LOG" 2>&1
+        log_change "PACKAGE" "Installed Tabby" "tabby-terminal"
+    fi
+    
+    if [ -f "${SCRIPT_DIR}/config_files/tabby_config.yaml" ]; then
+        mkdir -p "${HOME}/.config/tabby"
+        cp "${SCRIPT_DIR}/config_files/tabby_config.yaml" "${HOME}/.config/tabby/config.yaml"
+        log_change "CONFIG" "Installed tabby config" "${HOME}/.config/tabby/config.yaml"
+    fi
+    
+    print_green "Terminal applications installed"
+}
 
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to install Big Sur Wallpapers?"; then
+# Install desktop applications
+install_desktop_apps() {
+    print_blue "Installing desktop applications..."
+    
+    # Ulauncher
+    if ! command -v ulauncher &> /dev/null; then
+        print_blue "  Installing Ulauncher..."
+        sudo add-apt-repository -y ppa:agornostal/ulauncher >> "$INSTALL_LOG" 2>&1
+        sudo apt update -qq
+        sudo apt install -y ulauncher >> "$INSTALL_LOG" 2>&1
+        log_change "PACKAGE" "Installed Ulauncher" "ulauncher"
+    fi
+    
+    # Plank dock
+    if ! command -v plank &> /dev/null; then
+        sudo apt install -y plank >> "$INSTALL_LOG" 2>&1
+        log_change "PACKAGE" "Installed Plank" "plank"
+    fi
+    
+    print_green "Desktop applications installed"
+}
+
+# Install Cinnamon themes
+install_cinnamon_themes() {
+    print_blue "Installing Cinnamon themes..."
+    
+    local temp_dir=$(mktemp -d)
+    cd "$temp_dir"
+    
+    # GTK Theme
+    if [ ! -d "WhiteSur-gtk-theme" ]; then
+        print_blue "  Installing WhiteSur GTK theme..."
+        git clone -q git@github.com:felipevaldes/WhiteSur-gtk-theme.git 2>/dev/null || \
+        git clone -q https://github.com/felipevaldes/WhiteSur-gtk-theme.git
+        cd WhiteSur-gtk-theme
+        sudo ./install.sh >> "$INSTALL_LOG" 2>&1
+        cd ..
+        log_change "THEME" "Installed WhiteSur GTK theme" "system-wide"
+    fi
+    
+    # Icon Theme
+    if [ ! -d "WhiteSur-icon-theme" ]; then
+        print_blue "  Installing WhiteSur icon theme..."
+        git clone -q git@github.com:felipevaldes/WhiteSur-icon-theme.git 2>/dev/null || \
+        git clone -q https://github.com/felipevaldes/WhiteSur-icon-theme.git
+        cd WhiteSur-icon-theme
+        sudo ./install.sh >> "$INSTALL_LOG" 2>&1
+        cd ..
+        log_change "THEME" "Installed WhiteSur icon theme" "system-wide"
+    fi
+    
+    # Cursor Theme
+    if [ ! -d "McMojave-cursors" ]; then
+        print_blue "  Installing McMojave cursor theme..."
+        git clone -q git@github.com:felipevaldes/McMojave-cursors.git 2>/dev/null || \
+        git clone -q https://github.com/felipevaldes/McMojave-cursors.git
+        cd McMojave-cursors
+        sudo ./install.sh >> "$INSTALL_LOG" 2>&1
+        cd ..
+        log_change "THEME" "Installed McMojave cursor theme" "system-wide"
+    fi
+    
+    # Plank themes
+    if [ -d "WhiteSur-gtk-theme/src/other/plank" ]; then
+        mkdir -p "${HOME}/.local/share/plank/themes"
+        cp -r WhiteSur-gtk-theme/src/other/plank/theme-Dark "${HOME}/.local/share/plank/themes/" 2>/dev/null || true
+        cp -r WhiteSur-gtk-theme/src/other/plank/theme-Light "${HOME}/.local/share/plank/themes/" 2>/dev/null || true
+        log_change "THEME" "Installed Plank themes" "${HOME}/.local/share/plank/themes"
+    fi
+    
+    cd - > /dev/null
+    rm -rf "$temp_dir"
+    
+    print_green "Cinnamon themes installed"
+}
+
+# Configure Cinnamon desktop settings
+configure_cinnamon() {
+    print_blue "Configuring Cinnamon desktop..."
+    
+    # Export current settings for rollback
+    local backup_dir="${HOME}/.config/cinnamon_backup_$(date +%Y%m%d_%H%M%S)"
+    mkdir -p "$backup_dir"
+    dconf dump /org/cinnamon/ > "${backup_dir}/cinnamon.dconf" 2>/dev/null || true
+    dconf dump /org/cinnamon/panels/ > "${backup_dir}/panels.dconf" 2>/dev/null || true
+    log_change "BACKUP" "Backed up Cinnamon settings" "$backup_dir"
+    
+    # Apply theme settings
+    gsettings set org.cinnamon.theme name "WhiteSur-Dark" 2>/dev/null || true
+    gsettings set org.cinnamon.desktop.interface gtk-theme "WhiteSur-Dark" 2>/dev/null || true
+    gsettings set org.cinnamon.desktop.interface icon-theme "WhiteSur-dark" 2>/dev/null || true
+    gsettings set org.cinnamon.desktop.interface cursor-theme "McMojave-cursors" 2>/dev/null || true
+    
+    log_change "CINNAMON" "Applied theme settings" "WhiteSur-Dark"
+    
+    print_yellow "Note: Some Cinnamon settings require manual configuration:"
+    print_yellow "  - Panel configuration (position, applets)"
+    print_yellow "  - Window manager settings"
+    print_yellow "  - Extensions (Transparent Panels, etc.)"
+    print_yellow "  See cinnamon/config_pictures/ for reference images"
+    
+    print_green "Cinnamon configuration applied"
+}
+
+# Configure RemNote
+configure_remnote() {
+    print_blue "Configuring RemNote..."
+    
+    if [ -f "${SCRIPT_DIR}/remnote/remnote.png" ]; then
+        sudo cp "${SCRIPT_DIR}/remnote/remnote.png" /usr/share/icons/
+        log_change "ICON" "Installed RemNote icon" "/usr/share/icons/remnote.png"
+    fi
+    
+    if [ -f "${SCRIPT_DIR}/remnote/remnote.desktop" ]; then
+        mkdir -p "${HOME}/.local/share/applications"
+        cp "${SCRIPT_DIR}/remnote/remnote.desktop" "${HOME}/.local/share/applications/"
+        log_change "DESKTOP" "Installed RemNote desktop file" "${HOME}/.local/share/applications/remnote.desktop"
+    fi
+    
+    print_yellow "Note: Move RemNote AppImage to ~/.local/bin/ manually"
+    print_green "RemNote configured"
+}
+
+# Main installation function
+main() {
+    print_blue "=========================================="
+    print_blue "  Ubuntu Cinnamon System Configuration"
+    print_blue "=========================================="
+    echo
+    
+    init_logging
+    check_system
+    
+    print_blue "=========================================="
+    update_system
+    
+    print_blue "=========================================="
+    install_dependencies
+    
+    print_blue "=========================================="
+    install_fonts
+    
+    print_blue "=========================================="
     install_wallpapers
-else
-    echo "Skipping Big Sur Wallpaper installation..."
-fi
+    
+    print_blue "=========================================="
+    install_shell_tools
+    
+    # print_blue "=========================================="
+    # install_terminal_apps
+    
+    print_blue "=========================================="
+    install_desktop_apps
+    
+    print_blue "=========================================="
+    install_cinnamon_themes
+    
+    print_blue "=========================================="
+    configure_cinnamon
+    
+    print_blue "=========================================="
+    if prompt_yes_no "Configure RemNote?"; then
+        configure_remnote
+    fi
+    
+    print_blue "=========================================="
+    print_green "Installation complete!"
+    print_yellow "Installation log: $INSTALL_LOG"
+    print_yellow "Changes log: $CHANGES_LOG"
+    print_yellow ""
+    print_yellow "Next steps:"
+    print_yellow "  - Logout and login to apply all changes"
+    print_yellow "  - Run 'vim' and execute ':PluginInstall' for Vim plugins"
+    print_yellow "  - Run 'tmux' and press [prefix]+I to install Tmux plugins"
+    print_yellow "  - Configure Cinnamon panel and extensions manually"
+}
 
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to install tabby?"; then
-    install_tabby
-else
-    echo "Skipping tabby installation..."
-fi
-
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to install starship?"; then
-    install_starship
-else
-    echo "Skipping starship installation..."
-fi
-
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to install plank?"; then
-    install_plank
-else
-    echo "Skipping plank installation..."
-fi
-
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to configure vim?"; then
-    install_vim
-else
-    echo "Skipping vim configuration..."
-fi
-
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to configure tmux?"; then
-    install_tmux
-else
-    echo "Skipping vim configuration..."
-fi
-
-print_blue "==================================================================="
-echo
-if prompt_yes_no "Do you want to configure remnote?"; then
-    configure_remnote
-else
-    echo "Skipping remnote configuration..."
-fi
-
-print_green "Done"
+# Run main function
+main "$@"
