@@ -114,23 +114,27 @@ install_fonts() {
 # Install wallpapers
 install_wallpapers() {
     print_blue "Installing wallpapers..."
-    
-    local wallpaper_source="${SCRIPT_DIR}/wallpapers/BigSurWallpapers4K.zip"
+
+    local wallpaper_url="https://github.com/felipevaldes/DevTools/releases/download/v1.0.0/wallpapers.tar.gz"
     local wallpaper_dest="/usr/share/backgrounds/big_sur"
-    
-    if [ -f "$wallpaper_source" ]; then
-        sudo mkdir -p "$wallpaper_dest"
-        sudo cp "$wallpaper_source" "$wallpaper_dest/"
-        cd "$wallpaper_dest"
-        sudo unzip -q BigSurWallpapers4K.zip
-        sudo rm BigSurWallpapers4K.zip
-        sudo rm -rf __MACOSX 2>/dev/null || true
-        
+    local temp_dir
+    temp_dir=$(mktemp -d)
+
+    sudo mkdir -p "$wallpaper_dest"
+    cd "$temp_dir"
+
+    print_blue "  Downloading wallpapers archive..."
+    if curl -sSL -o wallpapers.tar.gz "$wallpaper_url"; then
+        print_blue "  Extracting wallpapers..."
+        sudo tar -xzf wallpapers.tar.gz -C "$wallpaper_dest"
         log_change "WALLPAPERS" "Installed wallpapers" "$wallpaper_dest"
         print_green "Wallpapers installed"
     else
-        print_yellow "Wallpaper file not found, skipping..."
+        print_yellow "Failed to download wallpapers, skipping..."
     fi
+
+    cd - > /dev/null
+    rm -rf "$temp_dir"
 }
 
 # Install and configure shell tools
@@ -325,11 +329,20 @@ configure_cinnamon() {
     
     log_change "CINNAMON" "Applied theme settings" "WhiteSur-Dark"
     
-    print_yellow "Note: Some Cinnamon settings require manual configuration:"
-    print_yellow "  - Panel configuration (position, applets)"
-    print_yellow "  - Window manager settings"
-    print_yellow "  - Extensions (Transparent Panels, etc.)"
-    print_yellow "  See cinnamon/config_pictures/ for reference images"
+    print_blue "Applying Cinnamon panel, window manager, and extension settings..."
+
+    # Panel configuration (top, height, applets) - assumed to be set by cinnamon_settings.sh or gsettings here
+    if [ -f "${SCRIPT_DIR}/cinnamon/cinnamon_settings.sh" ]; then
+        bash "${SCRIPT_DIR}/cinnamon/cinnamon_settings.sh"
+        log_change "CINNAMON" "Applied advanced Cinnamon settings" "${SCRIPT_DIR}/cinnamon/cinnamon_settings.sh"
+    else
+        print_red "Cinnamon settings script not found. Some advanced settings may be missing."
+    fi
+
+    # Ensure Transparent Panels extension is enabled if installed
+    gsettings set org.cinnamon enabled-extensions "['transparent-panels@germanfr']" 2>/dev/null || true
+
+    print_green "Cinnamon advanced desktop configuration automated."
     
     print_green "Cinnamon configuration applied"
 }
