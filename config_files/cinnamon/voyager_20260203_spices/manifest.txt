@@ -1,0 +1,30 @@
+# Cinnamon Spices Configuration Manifest
+# Exported from: voyager
+# Date: 2026-02-03 09:43:18
+#
+# This directory contains JSON configuration files for Cinnamon applets,
+# extensions, and desklets. These are copied from:
+#   /home/felipe/.config/cinnamon/spices
+#
+# Structure:
+#   {applet-name}/
+#     {applet-name}.json or {instance-id}.json
+#
+# To restore, copy contents to ~/.config/cinnamon/spices/
+
+Exported spices:
+  - calendar@cinnamon.org
+  - Cinnamenu@json
+  - expo@cinnamon.org
+  - favorites@cinnamon.org
+  - gTile@shuairan
+  - network@cinnamon.org
+  - notifications@cinnamon.org
+  - power@cinnamon.org
+  - printers@cinnamon.org
+  - scale@cinnamon.org
+  - sound150@claudiux
+  - sound@cinnamon.org
+  - transparent-panels@germanfr
+  - user@cinnamon.org
+  - weather@mockturtl

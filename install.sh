@@ -138,8 +138,7 @@ install_wallpapers() {
 }
 
 # Install and configure shell tools
-
-() {
+install_shell_tools() {
     print_blue "Installing shell tools..."
     
     # Bash configuration
@@ -318,31 +317,42 @@ configure_cinnamon() {
     local backup_dir="${HOME}/.config/cinnamon_backup_$(date +%Y%m%d_%H%M%S)"
     mkdir -p "$backup_dir"
     dconf dump /org/cinnamon/ > "${backup_dir}/cinnamon.dconf" 2>/dev/null || true
-    dconf dump /org/cinnamon/panels/ > "${backup_dir}/panels.dconf" 2>/dev/null || true
     log_change "BACKUP" "Backed up Cinnamon settings" "$backup_dir"
     
-    # Apply theme settings
-    gsettings set org.cinnamon.theme name "WhiteSur-Dark" 2>/dev/null || true
-    gsettings set org.cinnamon.desktop.interface gtk-theme "WhiteSur-Dark" 2>/dev/null || true
-    gsettings set org.cinnamon.desktop.interface icon-theme "WhiteSur-dark" 2>/dev/null || true
-    gsettings set org.cinnamon.desktop.interface cursor-theme "McMojave-cursors" 2>/dev/null || true
+    # Look for Cinnamon config file
+    local config_file="${SCRIPT_DIR}/config_files/cinnamon/current.conf"
     
-    log_change "CINNAMON" "Applied theme settings" "WhiteSur-Dark"
-    
-    print_blue "Applying Cinnamon panel, window manager, and extension settings..."
-
-    # Panel configuration (top, height, applets) - assumed to be set by cinnamon_settings.sh or gsettings here
-    if [ -f "${SCRIPT_DIR}/cinnamon/cinnamon_settings.sh" ]; then
-        bash "${SCRIPT_DIR}/cinnamon/cinnamon_settings.sh"
-        log_change "CINNAMON" "Applied advanced Cinnamon settings" "${SCRIPT_DIR}/cinnamon/cinnamon_settings.sh"
+    if [ -f "$config_file" ] || [ -L "$config_file" ]; then
+        # Resolve symlink if needed
+        if [ -L "$config_file" ]; then
+            local resolved_config="${SCRIPT_DIR}/config_files/cinnamon/$(readlink "$config_file")"
+            if [ -f "$resolved_config" ]; then
+                config_file="$resolved_config"
+            fi
+        fi
+        
+        print_blue "  Using config file: $(basename "$config_file")"
+        
+        # Apply settings using cinnamon_settings.sh
+        if [ -f "${SCRIPT_DIR}/cinnamon_settings.sh" ]; then
+            bash "${SCRIPT_DIR}/cinnamon_settings.sh" --config "$config_file"
+            log_change "CINNAMON" "Applied Cinnamon settings" "$config_file"
+        else
+            print_red "cinnamon_settings.sh not found!"
+        fi
     else
-        print_red "Cinnamon settings script not found. Some advanced settings may be missing."
+        print_yellow "  No Cinnamon config file found at: $config_file"
+        print_yellow "  Run ./export_cinnamon_settings.sh to create one."
+        print_yellow "  Applying default theme settings only..."
+        
+        # Fallback: Apply basic theme settings
+        gsettings set org.cinnamon.theme name "WhiteSur-Dark" 2>/dev/null || true
+        gsettings set org.cinnamon.desktop.interface gtk-theme "WhiteSur-Dark" 2>/dev/null || true
+        gsettings set org.cinnamon.desktop.interface icon-theme "WhiteSur-dark" 2>/dev/null || true
+        gsettings set org.cinnamon.desktop.interface cursor-theme "McMojave-cursors" 2>/dev/null || true
+        
+        log_change "CINNAMON" "Applied default theme settings" "Fallback mode"
     fi
-
-    # Ensure Transparent Panels extension is enabled if installed
-    gsettings set org.cinnamon enabled-extensions "['transparent-panels@germanfr']" 2>/dev/null || true
-
-    print_green "Cinnamon advanced desktop configuration automated."
     
     print_green "Cinnamon configuration applied"
 }
