@@ -1,6 +1,6 @@
 # Cinnamon Spices Configuration Manifest
 # Exported from: voyager
-# Date: 2026-02-03 09:43:18
+# Date: 2026-02-03 18:24:25
 #
 # This directory contains JSON configuration files for Cinnamon applets,
 # extensions, and desklets. These are copied from:
