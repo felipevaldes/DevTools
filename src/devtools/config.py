@@ -57,6 +57,7 @@ SYSTEM_PACKAGES = [
     "build-essential",
     "dconf-cli",
     "flatpak",
+    "code",  # VSCode
 ]
 
 # Flatpak apps to install (replacing Snap apps)
