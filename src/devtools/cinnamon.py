@@ -48,7 +48,6 @@ def install_themes() -> None:
                 ["./install.sh"],
                 sudo=True,
                 cwd=gtk_dir,
-                shell=True,
             )
             changes_log.log("THEME", "Installed WhiteSur GTK theme", "system-wide")
             
@@ -71,7 +70,6 @@ def install_themes() -> None:
                 ["./install.sh"],
                 sudo=True,
                 cwd=icon_dir,
-                shell=True,
             )
             changes_log.log("THEME", "Installed WhiteSur icon theme", "system-wide")
         
@@ -83,7 +81,6 @@ def install_themes() -> None:
                 ["./install.sh"],
                 sudo=True,
                 cwd=cursor_dir,
-                shell=True,
             )
             changes_log.log("THEME", "Installed McMojave cursor theme", "system-wide")
         

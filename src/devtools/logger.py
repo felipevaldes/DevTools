@@ -3,6 +3,7 @@ Rich-based logging and console output utilities.
 """
 
 import logging
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -28,7 +29,8 @@ custom_theme = Theme({
     "info": "cyan",
     "success": "green",
     "warning": "yellow",
-    "error": "red bold",
+    "error": "bright_red bold",
+    "error_panel": "bold bright_white on bright_red",
     "step": "blue bold",
 })
 
@@ -76,8 +78,45 @@ def print_warning(message: str) -> None:
 
 
 def print_error(message: str) -> None:
-    """Print an error message."""
-    console.print(f"[error]✗[/error] {message}")
+    """Print an error message in a visible red panel."""
+    console.print()
+    console.print(Panel(
+        f"[bold bright_white]✗ ERROR[/bold bright_white]\n\n{message}",
+        style="bold bright_red",
+        border_style="bright_red",
+        expand=False,
+    ))
+    console.print()
+
+
+def print_exception(error: Exception, context: str = "") -> None:
+    """Print exception details in a highly visible format."""
+    console.print()
+    error_title = "EXCEPTION OCCURRED"
+    if context:
+        error_title = f"{error_title} - {context}"
+    
+    error_type = type(error).__name__
+    
+    error_content = f"[bold bright_white]Type:[/bold bright_white] {error_type}\n"
+    error_content += f"[bold bright_white]Message:[/bold bright_white] {error}\n"
+    
+    if isinstance(error, subprocess.CalledProcessError):
+        error_content += f"\n[bold bright_white]Command:[/bold bright_white] {' '.join(error.cmd) if isinstance(error.cmd, list) else error.cmd}\n"
+        error_content += f"[bold bright_white]Return Code:[/bold bright_white] {error.returncode}\n"
+        if error.stdout:
+            error_content += f"\n[bold bright_white]STDOUT:[/bold bright_white]\n{error.stdout}\n"
+        if error.stderr:
+            error_content += f"\n[bold bright_white]STDERR:[/bold bright_white]\n{error.stderr}\n"
+    
+    console.print(Panel(
+        error_content,
+        title=f"[bold bright_white]{error_title}[/bold bright_white]",
+        style="bold bright_red",
+        border_style="bright_red",
+        expand=False,
+    ))
+    console.print()
 
 
 def print_info(message: str) -> None:

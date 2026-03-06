@@ -157,7 +157,7 @@ def setup_flatpak() -> None:
         print_info("Installing Flatpak...")
         install_apt_package("flatpak")
         
-        # Also install GNOME Software Flatpak plugin if available
+        install_apt_package("gnome-software")
         install_apt_package("gnome-software-plugin-flatpak")
     else:
         print_info("Flatpak is already installed")
