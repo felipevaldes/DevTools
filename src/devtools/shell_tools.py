@@ -1,5 +1,5 @@
 """
-Shell tools configuration: Starship, tmux, Vim, and terminal apps.
+Shell tools configuration: Starship, Vim, and Ghostty.
 """
 
 from pathlib import Path
@@ -29,11 +29,46 @@ from .utils import (
 
 
 def install_shell_tools() -> None:
-    """Install and configure shell tools (Starship, tmux, Vim)."""
+    """Install and configure shell tools (Starship, Vim)."""
     _install_bash_config()
     _install_starship()
-    _install_tmux()
     _install_vim()
+
+
+def install_terminal_apps() -> None:
+    """Install terminal applications (Ghostty)."""
+    _install_ghostty()
+
+
+def _install_ghostty() -> None:
+    """Install and configure Ghostty terminal."""
+    print_info("Configuring Ghostty terminal...")
+    
+    if not command_exists("ghostty"):
+        print_info("  Installing Ghostty...")
+        
+        # Install using mkasberg/ghostty-ubuntu script
+        returncode, _, _ = run_command(
+            '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"',
+            shell=True,
+            check=False,
+        )
+        
+        if returncode == 0:
+            changes_log.log("PACKAGE", "Installed Ghostty", "ghostty")
+            print_success("  Ghostty installed")
+        else:
+            print_warning("  Failed to install Ghostty")
+    else:
+        print_info("  Ghostty already installed")
+    
+    # Install Ghostty config
+    ghostty_config_src = config.CONFIG_FILES_DIR / "ghostty_config"
+    if ghostty_config_src.exists():
+        ghostty_config_dest = config.CONFIG_DIR / "ghostty" / "config"
+        ensure_directory(ghostty_config_dest.parent)
+        copy_file(ghostty_config_src, ghostty_config_dest)
+        print_success("  Installed Ghostty config")
 
 
 def _install_bash_config() -> None:
@@ -90,37 +125,6 @@ def _install_starship() -> None:
         print_success("  Installed starship.toml")
 
 
-def _install_tmux() -> None:
-    """Install and configure tmux."""
-    print_info("Configuring tmux...")
-    
-    # Install tmux
-    if not command_exists("tmux"):
-        install_apt_package("tmux")
-        print_success("  Installed tmux")
-    else:
-        print_info("  tmux already installed")
-    
-    # Install .tmux.conf
-    tmux_conf_src = config.CONFIG_FILES_DIR / ".tmux.conf"
-    if tmux_conf_src.exists():
-        copy_file(tmux_conf_src, config.HOME_DIR / ".tmux.conf")
-        print_success("  Installed .tmux.conf")
-    
-    # Install TPM (Tmux Plugin Manager)
-    tpm_dir = config.HOME_DIR / ".tmux" / "plugins" / "tpm"
-    if not tpm_dir.exists():
-        print_info("  Installing Tmux Plugin Manager...")
-        ensure_directory(tpm_dir.parent)
-        
-        if git_clone("https://github.com/tmux-plugins/tpm", tpm_dir):
-            changes_log.log("TOOL", "Installed TPM", str(tpm_dir))
-            print_success("  TPM installed")
-            print_info("  Run tmux and press prefix + I to install plugins")
-    else:
-        print_info("  TPM already installed")
-
-
 def _install_vim() -> None:
     """Install and configure Vim."""
     print_info("Configuring Vim...")
@@ -158,41 +162,6 @@ def _install_vim() -> None:
             print_info("  Run vim +PluginInstall +qall to install plugins")
     else:
         print_info("  Vundle already installed")
-
-
-def install_terminal_apps() -> None:
-    """Install terminal applications (Tabby)."""
-    _install_tabby()
-
-
-def _install_tabby() -> None:
-    """Install and configure Tabby terminal."""
-    print_info("Configuring Tabby terminal...")
-    
-    if not command_exists("tabby"):
-        print_info("  Installing Tabby...")
-        
-        # Add Tabby repository and install
-        returncode, _, _ = run_command(
-            "curl -s https://packagecloud.io/install/repositories/eugeny/tabby/script.deb.sh | sudo bash",
-            shell=True,
-            check=False,
-        )
-        
-        if returncode == 0:
-            install_apt_package("tabby-terminal")
-            changes_log.log("PACKAGE", "Installed Tabby", "tabby-terminal")
-            print_success("  Tabby installed")
-    else:
-        print_info("  Tabby already installed")
-    
-    # Install Tabby config
-    tabby_config_src = config.CONFIG_FILES_DIR / "tabby_config.yaml"
-    if tabby_config_src.exists():
-        tabby_config_dest = config.CONFIG_DIR / "tabby" / "config.yaml"
-        ensure_directory(tabby_config_dest.parent)
-        copy_file(tabby_config_src, tabby_config_dest)
-        print_success("  Installed Tabby config")
 
 
 def install_desktop_apps() -> None:

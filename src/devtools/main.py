@@ -91,7 +91,7 @@ def install(
     This command will:
     - Install system dependencies
     - Install fonts and wallpapers
-    - Configure shell tools (Starship, tmux, Vim)
+    - Configure shell tools (Starship, Vim)
     - Remove Snap and install Flatpak (unless --skip-snap)
     - Install Cinnamon themes
     - Apply Cinnamon settings
@@ -218,7 +218,6 @@ def install(
     print_info("Next steps:")
     console.print("  • Log out and log back in to apply all changes")
     console.print("  • Run [cyan]vim +PluginInstall +qall[/cyan] to install Vim plugins")
-    console.print("  • Start tmux and press [cyan]prefix + I[/cyan] to install plugins")
     console.print("  • Run [cyan]cinnamon --replace &[/cyan] to reload Cinnamon")
 
 

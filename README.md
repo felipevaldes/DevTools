@@ -77,14 +77,13 @@ cd DevTools
 | Tool | Description |
 |------|-------------|
 | Starship | Cross-shell prompt with Git integration |
-| tmux + TPM | Terminal multiplexer with plugin manager |
 | Vim + Vundle | Text editor with plugin manager |
 
 ### Applications
 
 | Application | Description |
 |-------------|-------------|
-| Tabby | Modern terminal emulator |
+| Ghostty | GPU-accelerated terminal emulator |
 | Ulauncher | Application launcher |
 | Plank | macOS-style dock |
 
@@ -131,7 +130,7 @@ The bootstrap script will:
 2. Installs system dependencies (curl, git, build-essential, etc.)
 3. Installs fonts
 4. Installs wallpapers
-5. Configures shell tools (Starship, tmux, Vim)
+5. Configures shell tools (Starship, Vim)
 6. **Removes Snap** and sets up **Flatpak**
 7. Installs Cinnamon themes
 8. Applies Cinnamon settings
@@ -248,9 +247,8 @@ config_files/
 ├── .bashrc
 ├── .bash_aliases
 ├── .vimrc
-├── .tmux.conf
 ├── starship.toml
-└── tabby_config.yaml
+└── ghostty_config
 ```
 
 ---
@@ -283,21 +281,14 @@ Open **Cinnamon Settings > Extensions > Download** and install:
 vim +PluginInstall +qall
 ```
 
-### 4. Install tmux Plugins
-
-```bash
-tmux
-# Press prefix + I (default: Ctrl-b + I)
-```
-
-### 5. Import Firefox Bookmarks
+### 4. Import Firefox Bookmarks
 
 If you exported bookmarks:
 1. Open Firefox: `Ctrl+Shift+O`
 2. Import and Backup > Import from HTML
 3. Select `config_files/firefox/bookmarks.html`
 
-### 6. Set Wallpaper
+### 5. Set Wallpaper
 
 - Open **Cinnamon Settings > Backgrounds**
 - Navigate to `/usr/share/backgrounds/big_sur/`
@@ -323,7 +314,7 @@ DevTools/
 │       ├── cinnamon.py       # Cinnamon settings export/import
 │       ├── firefox.py        # Firefox extensions/bookmarks
 │       ├── flatpak.py        # Snap removal, Flatpak setup
-│       └── shell_tools.py    # Starship, tmux, Vim configs
+│       └── shell_tools.py    # Starship, Vim configs
 ├── config_files/             # Configuration files to deploy
 ├── fonts/                    # Font files
 └── wallpapers/               # Wallpaper archives
@@ -350,7 +341,7 @@ bootstrap.sh
     └── uv run devtools install
             │
             ├── system.py      → packages, fonts, wallpapers
-            ├── shell_tools.py → starship, tmux, vim
+            ├── shell_tools.py → starship, vim
             ├── flatpak.py     → snap removal, flatpak
             ├── cinnamon.py    → themes, settings
             └── firefox.py     → extensions, bookmarks
