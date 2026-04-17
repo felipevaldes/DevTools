@@ -104,7 +104,7 @@ def install(
         install_fonts,
         install_wallpapers,
     )
-    from .shell_tools import install_shell_tools, install_terminal_apps
+    from .shell_tools import install_shell_tools, install_terminal_apps, install_desktop_apps
     from .flatpak import purge_snap, setup_flatpak
     from .cinnamon import install_themes, apply_cinnamon_settings
     from .firefox import configure_firefox
@@ -176,6 +176,7 @@ def install(
     if not dry_run:
         install_shell_tools()
         install_terminal_apps()
+        install_desktop_apps()
     print_success("Shell tools configured")
     step += 1
     
