@@ -1,0 +1,81 @@
+[
+  {
+    "id": "addons-search-detection@mozilla.com",
+    "name": "Add-ons Search Detection",
+    "version": "2.0.0",
+    "description": "",
+    "homepage": "",
+    "enabled": true
+  },
+  {
+    "id": "hotfix-intermediate-2018@mozilla.com",
+    "name": "Fix add-ons signed before 2018 (Bug 1954818)",
+    "version": "1.0.20250321.123402",
+    "description": "Hotfix for https://bugzilla.mozilla.org/show_bug.cgi?id=1954818",
+    "homepage": "",
+    "enabled": true
+  },
+  {
+    "id": "simple-tab-groups@drive4ik",
+    "name": "Simple Tab Groups",
+    "version": "5.3.2",
+    "description": "Create, modify and quickly change tab groups",
+    "homepage": "https://github.com/drive4ik/simple-tab-groups",
+    "enabled": true,
+    "install_url": "https://addons.mozilla.org/firefox/downloads/file/4469818/simple_tab_groups-5.3.2.xpi"
+  },
+  {
+    "id": "FocusedYoutube@dukevin.com",
+    "name": "Focused Youtube",
+    "version": "9",
+    "description": "Remove video suggestions and distractions from Youtube",
+    "homepage": "https://github.com/dukevin/FocusedYoutube",
+    "enabled": true,
+    "install_url": "https://addons.mozilla.org/firefox/downloads/file/4501364/focused_youtube-9.xpi"
+  },
+  {
+    "id": "{d634138d-c276-4fc8-924b-40a0ea21d284}",
+    "name": "1Password \u2013 Password Manager",
+    "version": "8.12.4.46",
+    "description": "The best way to experience 1Password in your browser. Easily sign in to sites, generate passwords, and store secure information.",
+    "homepage": "https://1password.com",
+    "enabled": true,
+    "install_url": "https://addons.mozilla.org/firefox/downloads/file/4704219/1password_x_password_manager-8.12.4.46.xpi"
+  },
+  {
+    "id": "{0838ab1b-8795-4002-8da1-9d32de3c6c3b}",
+    "name": "ChatGPT to PDF by PDFCrowd",
+    "version": "3.8",
+    "description": "Turn your chats into neatly formatted PDF.",
+    "homepage": "",
+    "enabled": true,
+    "install_url": "https://addons.mozilla.org/firefox/downloads/file/4732349/save_chatgpt_as_pdf-3.8.xpi"
+  },
+  {
+    "id": "addon@darkreader.org",
+    "name": "Dark Reader",
+    "version": "4.9.124",
+    "description": "Dark mode for every website. Take care of your eyes, use dark theme for night and daily browsing.",
+    "homepage": "",
+    "enabled": true,
+    "install_url": "https://addons.mozilla.org/firefox/downloads/file/4748915/darkreader-4.9.124.xpi"
+  },
+  {
+    "id": "sponsorBlocker@ajay.app",
+    "name": "SponsorBlock for YouTube - Skip Sponsorships",
+    "version": "6.1.3",
+    "description": "Skip sponsorships, subscription begging and more on YouTube videos. Report sponsors on videos you watch to save others' time.",
+    "homepage": "https://sponsor.ajay.app",
+    "enabled": true,
+    "install_url": "https://addons.mozilla.org/firefox/downloads/file/4744354/sponsorblock-6.1.3.xpi"
+  },
+  {
+    "id": "{eed4110c-d14e-401e-83e8-b9c41b72d323}",
+    "name": "YouTube Video Downloader",
+    "version": "1.2",
+    "description": "YouTube Downloader \u2013 Fast & Free Video Download for Firefox | 4K Supported",
+    "homepage": "https://ytvideosaver.com/",
+    "enabled": true,
+    "install_url": "https://addons.mozilla.org/firefox/downloads/file/4675349/youtube_downloader_fast_free-1.2.xpi"
+  }
+]

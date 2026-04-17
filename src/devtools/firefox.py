@@ -38,37 +38,51 @@ def find_default_profile() -> Optional[Path]:
     
     content = profiles_ini.read_text()
     
-    # Look for default profile
-    current_section = {}
-    default_path = None
+    # Parse all sections
+    sections = {}
+    current_section = None
     
     for line in content.splitlines():
         line = line.strip()
         
-        if line.startswith("["):
-            # Save previous section if it was default
-            if current_section.get("Default") == "1" and "Path" in current_section:
-                default_path = current_section["Path"]
-                break
-            current_section = {}
-        elif "=" in line:
+        if line.startswith("[") and line.endswith("]"):
+            current_section = line[1:-1]
+            sections[current_section] = {}
+        elif "=" in line and current_section:
             key, value = line.split("=", 1)
-            current_section[key] = value
+            sections[current_section][key] = value
     
-    # Check last section
-    if default_path is None and current_section.get("Default") == "1" and "Path" in current_section:
-        default_path = current_section["Path"]
+    # First, check Install section for Default profile
+    install_default = None
+    for section_name, section_data in sections.items():
+        if section_name.startswith("Install"):
+            install_default = section_data.get("Default")
+            break
     
-    # Try to find any profile with .default-release suffix
-    if default_path is None:
-        for profile_dir in config.FIREFOX_PROFILE_DIR.iterdir():
-            if profile_dir.is_dir() and ".default-release" in profile_dir.name:
-                return profile_dir
+    # If Install default exists, find the matching profile
+    if install_default:
+        for section_name, section_data in sections.items():
+            if section_name.startswith("Profile"):
+                profile_path = section_data.get("Path")
+                profile_name = section_data.get("Name")
+                if profile_path == install_default or profile_name == install_default:
+                    profile_dir = config.FIREFOX_PROFILE_DIR / profile_path
+                    if profile_dir.exists():
+                        return profile_dir
     
-    if default_path:
-        profile_path = config.FIREFOX_PROFILE_DIR / default_path
-        if profile_path.exists():
-            return profile_path
+    # Fallback: Look for profile with Default=1
+    for section_name, section_data in sections.items():
+        if section_name.startswith("Profile") and section_data.get("Default") == "1":
+            profile_path = section_data.get("Path")
+            if profile_path:
+                profile_dir = config.FIREFOX_PROFILE_DIR / profile_path
+                if profile_dir.exists():
+                    return profile_dir
+    
+    # Final fallback: Try to find any profile with .default-release suffix
+    for profile_dir in config.FIREFOX_PROFILE_DIR.iterdir():
+        if profile_dir.is_dir() and ".default-release" in profile_dir.name:
+            return profile_dir
     
     print_warning("Could not find default Firefox profile")
     return None
@@ -139,8 +153,8 @@ def _export_extensions(profile_dir: Path) -> list[dict]:
         }
         
         # Try to get Mozilla addon URL
-        source_uri = addon.get("sourceURI", "")
-        if "addons.mozilla.org" in source_uri:
+        source_uri = addon.get("sourceURI") or ""
+        if source_uri and "addons.mozilla.org" in source_uri:
             ext_info["install_url"] = source_uri
         
         extensions.append(ext_info)

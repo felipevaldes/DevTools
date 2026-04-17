@@ -1,6 +1,15 @@
 # Firefox Configuration Export
-# Date: 2026-04-17 15:20:58
+# Date: 2026-04-17 16:45:04
 
 ## Extensions
+  - Add-ons Search Detection (addons-search-detection@mozilla.com)
+  - Fix add-ons signed before 2018 (Bug 1954818) (hotfix-intermediate-2018@mozilla.com)
+  - Simple Tab Groups (simple-tab-groups@drive4ik)
+  - Focused Youtube (FocusedYoutube@dukevin.com)
+  - 1Password – Password Manager ({d634138d-c276-4fc8-924b-40a0ea21d284})
+  - ChatGPT to PDF by PDFCrowd ({0838ab1b-8795-4002-8da1-9d32de3c6c3b})
+  - Dark Reader (addon@darkreader.org)
+  - SponsorBlock for YouTube - Skip Sponsorships (sponsorBlocker@ajay.app)
+  - YouTube Video Downloader ({eed4110c-d14e-401e-83e8-b9c41b72d323})
 
-## Bookmarks: 0 items
+## Bookmarks: 19 items
