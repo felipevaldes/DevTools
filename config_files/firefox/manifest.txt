@@ -1,0 +1,6 @@
+# Firefox Configuration Export
+# Date: 2026-04-17 15:20:58
+
+## Extensions
+
+## Bookmarks: 0 items
