@@ -2,10 +2,9 @@
 DevTools CLI - Main entry point.
 
 Usage:
-    devtools install [--dry-run] [--skip-snap] [--skip-firefox]
+    devtools install [--dry-run] [--skip-snap]
     devtools restore [--dry-run]
     devtools export-cinnamon
-    devtools export-firefox
 """
 
 from typing import Optional
@@ -68,11 +67,6 @@ def install(
         "--skip-snap",
         help="Skip Snap removal and Flatpak setup.",
     ),
-    skip_firefox: bool = typer.Option(
-        False,
-        "--skip-firefox",
-        help="Skip Firefox configuration.",
-    ),
     skip_themes: bool = typer.Option(
         False,
         "--skip-themes",
@@ -95,7 +89,6 @@ def install(
     - Remove Snap and install Flatpak (unless --skip-snap)
     - Install Cinnamon themes
     - Apply Cinnamon settings
-    - Configure Firefox (unless --skip-firefox)
     """
     from .system import (
         check_system,
@@ -107,7 +100,6 @@ def install(
     from .shell_tools import install_shell_tools, install_terminal_apps, install_desktop_apps
     from .flatpak import purge_snap, setup_flatpak
     from .cinnamon import install_themes, apply_cinnamon_settings
-    from .firefox import configure_firefox
     
     print_header("DevTools System Configuration")
     
@@ -133,10 +125,8 @@ def install(
     if not dry_run:
         changes_log.start_session()
     
-    total_steps = 9
+    total_steps = 8
     if skip_snap:
-        total_steps -= 1
-    if skip_firefox:
         total_steps -= 1
     if skip_themes:
         total_steps -= 1
@@ -205,14 +195,6 @@ def install(
     print_success("Cinnamon settings applied")
     step += 1
     
-    # Step 9: Firefox
-    if not skip_firefox:
-        print_step(step, total_steps, "Configuring Firefox...")
-        if not dry_run:
-            configure_firefox()
-        print_success("Firefox configured")
-        step += 1
-    
     console.print()
     print_header("Installation Complete!")
     
@@ -276,23 +258,6 @@ def export_cinnamon() -> None:
     export_cinnamon_settings()
     
     print_success("Cinnamon settings exported!")
-
-
-@app.command("export-firefox")
-def export_firefox_cmd() -> None:
-    """
-    Export Firefox extensions and bookmarks.
-    
-    Exports the current Firefox profile's extensions and bookmarks
-    to config_files/firefox/.
-    """
-    from .firefox import export_firefox
-    
-    print_header("Export Firefox Settings")
-    
-    export_firefox()
-    
-    print_success("Firefox settings exported!")
 
 
 @app.command("apply-cinnamon")

@@ -24,10 +24,6 @@ REMNOTE_DIR = SCRIPT_DIR / "remnote"
 CINNAMON_CONFIG_DIR = CONFIG_FILES_DIR / "cinnamon"
 CINNAMON_SPICES_SRC = CONFIG_DIR / "cinnamon" / "spices"
 
-# Firefox config  
-FIREFOX_CONFIG_DIR = CONFIG_FILES_DIR / "firefox"
-FIREFOX_PROFILE_DIR = HOME_DIR / ".mozilla" / "firefox"
-
 # Logging
 INSTALL_LOG = CONFIG_DIR / "devtools_install.log"
 CHANGES_LOG = CONFIG_DIR / "devtools_changes.log"
@@ -63,7 +59,6 @@ SYSTEM_PACKAGES = [
 # Flatpak apps to install (replacing Snap apps)
 FLATPAK_APPS = [
     "com.spotify.Client",
-    "org.mozilla.firefox",
     "org.videolan.VLC",
     "com.discordapp.Discord",
 ]

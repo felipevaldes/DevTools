@@ -42,9 +42,6 @@ cd DevTools
 ```bash
 # Export Cinnamon settings
 ./bootstrap.sh export-cinnamon
-
-# Export Firefox extensions and bookmarks
-./bootstrap.sh export-firefox
 ```
 
 ### Restore to Fresh State
@@ -92,7 +89,6 @@ cd DevTools
 | Application | Flatpak ID |
 |-------------|------------|
 | Spotify | com.spotify.Client |
-| Firefox | org.mozilla.firefox |
 | VLC | org.videolan.VLC |
 | Discord | com.discordapp.Discord |
 
@@ -134,7 +130,7 @@ The bootstrap script will:
 6. **Removes Snap** and sets up **Flatpak**
 7. Installs Cinnamon themes
 8. Applies Cinnamon settings
-9. Configures Firefox (if exported settings exist)
+
 
 ---
 
@@ -149,7 +145,6 @@ The bootstrap script will:
 # Installation options
 ./bootstrap.sh install --dry-run       # Preview without changes
 ./bootstrap.sh install --skip-snap     # Keep Snap, skip Flatpak
-./bootstrap.sh install --skip-firefox  # Skip Firefox configuration
 ./bootstrap.sh install --skip-themes   # Skip theme installation
 ./bootstrap.sh install -y              # Answer yes to all prompts
 
@@ -159,7 +154,6 @@ The bootstrap script will:
 
 # Export settings from current system
 ./bootstrap.sh export-cinnamon
-./bootstrap.sh export-firefox
 
 # Apply Cinnamon settings
 ./bootstrap.sh apply-cinnamon
@@ -221,16 +215,6 @@ Exports:
 - **Applet configs** → `config_files/cinnamon/{hostname}_{date}_spices/`
 - **Custom keybindings** → Included in `.conf` file
 
-### Firefox Settings
-
-```bash
-./bootstrap.sh export-firefox
-```
-
-Exports:
-- **Extensions** → `config_files/firefox/extensions.json`
-- **Bookmarks** → `config_files/firefox/bookmarks.json` and `bookmarks.html`
-
 ### Config File Structure
 
 ```
@@ -240,10 +224,6 @@ config_files/
 │   ├── current_spices            → symlink to active spices
 │   └── voyager_20260203_cinnamon.conf
 │       voyager_20260203_spices/
-├── firefox/
-│   ├── extensions.json
-│   ├── bookmarks.json
-│   └── bookmarks.html
 ├── .bashrc
 ├── .bash_aliases
 ├── .vimrc
@@ -281,14 +261,11 @@ Open **Cinnamon Settings > Extensions > Download** and install:
 vim +PluginInstall +qall
 ```
 
-### 4. Import Firefox Bookmarks
+### 4. Set Wallpaper
 
-If you exported bookmarks:
-1. Open Firefox: `Ctrl+Shift+O`
-2. Import and Backup > Import from HTML
-3. Select `config_files/firefox/bookmarks.html`
+- Open **Cinnamon Settings > Backgrounds**
+- Navigate to `/usr/share/backgrounds/big_sur/`
 
-### 5. Set Wallpaper
 
 - Open **Cinnamon Settings > Backgrounds**
 - Navigate to `/usr/share/backgrounds/big_sur/`
@@ -312,7 +289,6 @@ DevTools/
 │       ├── utils.py          # Shell commands, file operations
 │       ├── system.py         # Packages, fonts, wallpapers
 │       ├── cinnamon.py       # Cinnamon settings export/import
-│       ├── firefox.py        # Firefox extensions/bookmarks
 │       ├── flatpak.py        # Snap removal, Flatpak setup
 │       └── shell_tools.py    # Starship, Vim configs
 ├── config_files/             # Configuration files to deploy
@@ -344,7 +320,7 @@ bootstrap.sh
             ├── shell_tools.py → starship, vim
             ├── flatpak.py     → snap removal, flatpak
             ├── cinnamon.py    → themes, settings
-            └── firefox.py     → extensions, bookmarks
+
 ```
 
 ### Changes Log
@@ -354,8 +330,6 @@ All modifications are logged to `~/.config/devtools_changes.log`:
 ```
 [2026-02-03 09:30:15] [PACKAGE] Installed curl | apt
 [2026-02-03 09:30:20] [FONTS] Installed fonts | /home/user/.local/share/fonts
-[2026-02-03 09:30:25] [SNAP] Removed snap package | firefox
-[2026-02-03 09:30:30] [FLATPAK] Installed Flatpak app | org.mozilla.firefox
 ```
 
 ---
